@@ -5,6 +5,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
 import { User } from '@supabase/supabase-js'
 import { Header } from "@/components/Header"
+import { Footer } from "@/components/Footer"
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null)
@@ -33,13 +34,19 @@ export default function Home() {
   }
 
   return (
-    <main className=" flex flex-col items-center justify-center bg-white">
+    <main className="flex flex-col items-center justify-center bg-gray-50 min-h-screen">
       <Header user={user} />
       
-      <div className="max-w-md w-full mx-auto p-8">
-        <h1 className="text-4xl font-krub font-semibold text-center mb-8 text-gray-600">เกมส์ Tic Tac Toe</h1>
-        <GameBoard />
+      <div className="container mx-auto p-8">
+        <h1 className="text-4xl font-krub font-semibold text-center mb-8 text-gray-600">
+          เกมส์ Tic Tac Toe
+        </h1>
+        <div className="flex justify-center">
+          <GameBoard />
+        </div>
       </div>
+      
+      <Footer />
     </main>
   )
 }

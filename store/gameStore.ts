@@ -83,16 +83,17 @@ const useGameStore = create<GameState>((set, get) => ({
 
     const { winner, line } = calculateWinner(newBoard)
     if (winner) {
+      const newStreak = winner === "X" ? state.streak + 1 : 0
+      // ได้โบนัสทุกๆ 3 ครั้ง (3, 6, 9, ...)
+      const bonusScore = winner === "X" && newStreak % 3 === 0 ? 1 : 0
+
       set({
         board: newBoard,
         winner,
         winningLine: line,
-        score: state.score + (winner === "X" ? 1 : -1),
-        streak: winner === "X" ? state.streak + 1 : 0
+        score: state.score + (winner === "X" ? 1 : -1) + bonusScore,
+        streak: newStreak
       })
-      if (winner === "X" && (state.streak + 1) >= 3) {
-        set(state => ({ score: state.score + 1, streak: 0 }))
-      }
       return
     }
 

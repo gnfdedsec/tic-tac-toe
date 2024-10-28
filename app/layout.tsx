@@ -1,9 +1,13 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Krub } from 'next/font/google';
 import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ['latin'] });
+const krub = Krub({ 
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin', 'thai'],
+});
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -17,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className} suppressHydrationWarning>
+      <body className={krub.className} suppressHydrationWarning>
         {children}
         <Toaster />
       </body>

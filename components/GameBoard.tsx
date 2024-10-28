@@ -26,7 +26,8 @@ export function GameBoard() {
   const [stats, setStats] = useState({
     currentRank: 'Bronze',
     maxStreak: 0,
-    totalGames: 0
+    totalGames: 0,
+    total_score: 0
   })
   const [leaderboard, setLeaderboard] = useState([])
   const supabase = createClientComponentClient()
@@ -109,8 +110,8 @@ export function GameBoard() {
               <p className="text-sm font-medium text-gray-700">{stats.currentRank}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500">สถิติชนะติดต่อกันสูงสุด</p>
-              <p className="text-sm font-medium text-gray-700">{stats.maxStreak} ครั้ง</p>
+              <p className="text-xs text-gray-500">สถิติคะแนนรวม</p>
+              <p className="text-sm font-medium text-gray-700">{stats.total_score || 0} คะแนน</p>
             </div>
             <div>
               <p className="text-xs text-gray-500">เกมที่เล่นทั้งหมด</p>

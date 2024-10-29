@@ -35,22 +35,36 @@ export function GameBoard({ user }) {
   const [leaderboard, setLeaderboard] = useState([])
   const supabase = createClientComponentClient()
 
-  // เพิ่ม state เพื่อติดตามว่าได้อัพเดทสถิติของเกมปัจจุบันแล้วหรือยัง
+  // เพิ่ม state เพื่อติดตามอัพเดทสถิติของเกมปัจจุบันแล้วหรือยัง
   const [hasUpdated, setHasUpdated] = useState(false)
 
-  // เพิ่ม useEffect เพื่อดึงข้อมูลสถิติเมื่อ component โหลด
+  // เพิ่ม useEffect สำหรับดึงข้อมูลเริ่มต้น
   useEffect(() => {
     const fetchInitialStats = async () => {
+      console.log("Fetching initial stats...") // debug
       const result = await getGameStats()
+      console.log("Result from getGameStats:", result) // debug
+      
       if (result.success && result.data) {
+        console.log("Setting stats with:", result.data) // debug
         setStats({
-          total_score: result.data.total_score,
-          total_games: result.data.total_games
+          total_score: result.data.total_score || 0,
+          total_games: result.data.total_games || 0
         })
+      } else {
+        console.error("Failed to fetch stats:", result) // debug error
       }
     }
-    fetchInitialStats()
-  }, []) // เรียกครั้งเดียวตอน component mount
+    
+    if (user?.id) { // เพิ่มเงื่อนไขให้รอจนกว่าจะมี user
+      fetchInitialStats()
+    }
+  }, [user]) // เพิ่ม user เป็น dependency
+
+  // แสดง loading state ถ้ายังไม่มีข้อมูล
+  useEffect(() => {
+    console.log("Current stats:", stats) // debug current stats
+  }, [stats])
 
   useEffect(() => {
     if (winner) {
@@ -90,15 +104,20 @@ export function GameBoard({ user }) {
   useEffect(() => {
     const updateStats = async () => {
       if ((winner || board.every(square => square !== null)) && !hasUpdated) {
+        let scoreChange = 0;
+        if (winner === 'X') {
+          scoreChange = 1; // ชนะ +1
+        } else if (winner === 'O') {
+          scoreChange = -1; // แพ้ -1
+        } // เสมอ +0
+
         const newStats = {
-          total_score: stats.total_score + score,
-          total_games: stats.total_games + 1
+          total_score: stats.total_score + scoreChange,
+          total_games: stats.total_games + 1,
+          streak: streak
         }
         
-        const result = await updateGameStats({
-          ...newStats,
-          streak: streak
-        })
+        const result = await updateGameStats(newStats)
         
         if (result.success) {
           setStats(newStats)
@@ -114,7 +133,7 @@ export function GameBoard({ user }) {
     }
     
     updateStats()
-  }, [winner, board, score, streak, stats.total_score, stats.total_games, hasUpdated])
+  }, [winner, board, streak, stats.total_score, stats.total_games, hasUpdated])
 
   // รีเซ็ต hasUpdated เมื่อเริ่มเกมใหม่
   useEffect(() => {
@@ -122,8 +141,6 @@ export function GameBoard({ user }) {
       setHasUpdated(false)
     }
   }, [winner, board])
-
-  const totalScore = stats.total_score + score
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 max-w-[1200px] w-full">
@@ -137,7 +154,7 @@ export function GameBoard({ user }) {
           <CardContent className="space-y-3 p-4">
             <div>
               <p className="text-xs text-gray-500">คะแนนรวมทั้งหมด</p>
-              <p className="text-sm font-medium text-gray-700">{totalScore} คะแนน</p>
+              <p className="text-sm font-medium text-gray-700">{stats.total_score} คะแนน</p>
             </div>
             <div>
               <p className="text-xs text-gray-500">เกมที่เล่นทั้งหมด</p>

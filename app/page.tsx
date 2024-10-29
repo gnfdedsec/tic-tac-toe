@@ -6,31 +6,55 @@ import { useRouter } from 'next/navigation'
 import { User } from '@supabase/supabase-js'
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
+import { getGameStats } from "@/app/actions/getStats"
+import useGameStore from "@/store/gameStore"
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
   const supabase = createClientComponentClient()
 
   useEffect(() => {
-    const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        router.push('/login')
-      } else {
+    const checkUserAndStats = async () => {
+      try {
+        setIsLoading(true)
+        const { data: { session } } = await supabase.auth.getSession()
+        
+        if (!session) {
+          router.push('/login')
+          return
+        }
+        
         setUser(session.user)
+        
+        // ดึงข้อมูลสถิติทันทีที่ login สำเร็จ
+        const result = await getGameStats()
+        if (result.success && result.data) {
+          // อัพเดทข้อมูลใน store
+          useGameStore.setState({
+            initialStats: {
+              total_score: result.data.total_score,
+              total_games: result.data.total_games
+            }
+          })
+        }
+      } catch (error) {
+        console.error('Error:', error)
+      } finally {
+        setIsLoading(false)
       }
     }
-    checkUser()
+    
+    checkUserAndStats()
   }, [router, supabase])
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    router.push('/login')
+  if (isLoading) {
+    return <div className="flex items-center justify-center min-h-screen">กำลังโหลด...</div>
   }
 
   if (!user) {
-    return <div>กำลังโหลด...</div>
+    return null
   }
 
   return (
@@ -42,7 +66,7 @@ export default function Home() {
           เกมส์ Tic Tac Toe
         </h1>
         <div className="flex justify-center">
-          <GameBoard />
+          <GameBoard user={user} />
         </div>
       </div>
       

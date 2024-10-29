@@ -9,8 +9,10 @@ import useGameStore from "@/store/gameStore"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import Link from 'next/link'
+import { updateGameStats } from '@/app/actions/updateStats'
+import { getGameStats } from "@/app/actions/getStats"
 
-export function GameBoard() {
+export function GameBoard({ user }) {
   const { toast } = useToast()
   const {
     board,
@@ -21,23 +23,41 @@ export function GameBoard() {
     streak,
     makeMove,
     resetGame,
+    gamesPlayed,
+    initialStats
   } = useGameStore()
 
   const [stats, setStats] = useState({
-    currentRank: 'Bronze',
-    maxStreak: 0,
-    totalGames: 0,
-    total_score: 0
+    total_score: 0,
+    total_games: 0
   })
+
   const [leaderboard, setLeaderboard] = useState([])
   const supabase = createClientComponentClient()
+
+  // เพิ่ม state เพื่อติดตามว่าได้อัพเดทสถิติของเกมปัจจุบันแล้วหรือยัง
+  const [hasUpdated, setHasUpdated] = useState(false)
+
+  // เพิ่ม useEffect เพื่อดึงข้อมูลสถิติเมื่อ component โหลด
+  useEffect(() => {
+    const fetchInitialStats = async () => {
+      const result = await getGameStats()
+      if (result.success && result.data) {
+        setStats({
+          total_score: result.data.total_score,
+          total_games: result.data.total_games
+        })
+      }
+    }
+    fetchInitialStats()
+  }, []) // เรียกครั้งเดียวตอน component mount
 
   useEffect(() => {
     if (winner) {
       if (winner === "X") {
         if (streak % 3 === 0) { // ทุกๆ 3 ครั้ง (3, 6, 9, ...)
           toast({
-            title: "🎉 ยินดีด���วย! คุณชนะ",
+            title: "🎉 ยินดีด้วย! คุณชนะ",
             description: `ชนะต่อเนื่อง ${streak} ครั้ง! ได้คะแนนโบนัสพิเศษ +1 คะแนน 🌟`,
           })
         } else if (streak % 3 === 2) { // ก่อนจะครบ 3 ครั้ง (2, 5, 8, ...)
@@ -66,34 +86,44 @@ export function GameBoard() {
     }
   }, [winner, board, streak, toast])
 
-  // เพิ่ม function ดึงข้อมูล
-  const fetchStats = async () => {
-    const { data, error } = await supabase
-      .from('game_stats')
-      .select('*')
-      .single()
-    
-    if (data) {
-      setStats(data)
-    }
-  }
-
-  const fetchLeaderboard = async () => {
-    const { data, error } = await supabase
-      .from('game_stats')
-      .select('*, users:auth.users(email)')
-      .order('total_score', { ascending: false })
-      .limit(5)
-    
-    if (data) {
-      setLeaderboard(data)
-    }
-  }
-
+  // อัพเดทสถิติเมื่อจบเกม
   useEffect(() => {
-    fetchStats()
-    fetchLeaderboard()
-  }, [])
+    const updateStats = async () => {
+      if ((winner || board.every(square => square !== null)) && !hasUpdated) {
+        const newStats = {
+          total_score: stats.total_score + score,
+          total_games: stats.total_games + 1
+        }
+        
+        const result = await updateGameStats({
+          ...newStats,
+          streak: streak
+        })
+        
+        if (result.success) {
+          setStats(newStats)
+          setHasUpdated(true)
+        } else {
+          toast({
+            title: "เกิดข้อผิดพลาด",
+            description: "ไม่สามารถอัพเดทสถิติได้",
+            variant: "destructive",
+          })
+        }
+      }
+    }
+    
+    updateStats()
+  }, [winner, board, score, streak, stats.total_score, stats.total_games, hasUpdated])
+
+  // รีเซ็ต hasUpdated เมื่อเริ่มเกมใหม่
+  useEffect(() => {
+    if (!winner && !board.every(square => square !== null)) {
+      setHasUpdated(false)
+    }
+  }, [winner, board])
+
+  const totalScore = stats.total_score + score
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 max-w-[1200px] w-full">
@@ -106,16 +136,12 @@ export function GameBoard() {
           </CardHeader>
           <CardContent className="space-y-3 p-4">
             <div>
-              <p className="text-xs text-gray-500">อันดับปัจจุบัน</p>
-              <p className="text-sm font-medium text-gray-700">{stats.currentRank}</p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500">สถิติคะแนนรวม</p>
-              <p className="text-sm font-medium text-gray-700">{stats.total_score || 0} คะแนน</p>
+              <p className="text-xs text-gray-500">คะแนนรวมทั้งหมด</p>
+              <p className="text-sm font-medium text-gray-700">{totalScore} คะแนน</p>
             </div>
             <div>
               <p className="text-xs text-gray-500">เกมที่เล่นทั้งหมด</p>
-              <p className="text-sm font-medium text-gray-700">{stats.totalGames} เกม</p>
+              <p className="text-sm font-medium text-gray-700">{stats.total_games} เกม</p>
             </div>
             <Link href="/leaderboards" className="block mt-2">
               <Button 
@@ -168,6 +194,9 @@ export function GameBoard() {
                 : board.every((square) => square !== null)
                 ? "เสมอ!"
                 : `ผู้เล่นปัจจุบัน: ${currentPlayer}`}
+              <span className="ml-2 text-gray-500">
+                (เกมที่ {gamesPlayed + (winner || board.every(square => square !== null) ? 0 : 1)})
+              </span>
             </p>
           </CardContent>
         </Card>

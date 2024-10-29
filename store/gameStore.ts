@@ -10,6 +10,11 @@ interface GameState {
   winningLine: number[] | null
   score: number
   streak: number
+  gamesPlayed: number
+  initialStats: {
+    total_score: number
+    total_games: number
+  }
   makeMove: (index: number) => void
   resetGame: () => void
 }
@@ -74,6 +79,11 @@ const useGameStore = create<GameState>((set, get) => ({
   winningLine: null,
   score: 0,
   streak: 0,
+  gamesPlayed: 0,
+  initialStats: {
+    total_score: 0,
+    total_games: 0
+  },
 
   makeMove: (index: number) => {
     const state = get()
@@ -83,27 +93,31 @@ const useGameStore = create<GameState>((set, get) => ({
     newBoard[index] = state.currentPlayer
 
     const { winner, line } = calculateWinner(newBoard)
-    if (winner) {
-      const newStreak = winner === "X" ? state.streak + 1 : 0
-      const bonusScore = winner === "X" && newStreak % 3 === 0 ? 1 : 0
+    
+    // ถ้าผู้เล่นชนะ
+    if (winner === "X") {
+      const newStreak = state.streak + 1
+      const bonusScore = newStreak % 3 === 0 ? 1 : 0
 
-      set({
+      set(state => ({
         board: newBoard,
         winner,
         winningLine: line,
-        score: state.score + (winner === "X" ? 1 : -1) + bonusScore,
-        streak: newStreak
-      })
+        score: state.score + 1 + bonusScore,
+        streak: newStreak,
+        gamesPlayed: state.gamesPlayed + 1 // เพิ่มจำนวนเกมเมื่อจบเกม
+      }))
       return
     }
 
     // เช็คเกมเสมอหลังจากผู้เล่นเดิน
     if (newBoard.every(square => square !== null)) {
-      set({
+      set(state => ({
         board: newBoard,
         winner: null,
-        winningLine: null
-      })
+        winningLine: null,
+        gamesPlayed: state.gamesPlayed + 1 // เพิ่มจำนวนเกมเมื่อเสมอ
+      }))
       return
     }
 
@@ -112,32 +126,45 @@ const useGameStore = create<GameState>((set, get) => ({
     newBoard[botMove] = "O"
     const botResult = calculateWinner(newBoard)
     
-    // เช็คเกมเสมอหลังจาก bot เดิน
-    if (!botResult.winner && newBoard.every(square => square !== null)) {
-      set({
+    // ถ้า bot ชนะ
+    if (botResult.winner === "O") {
+      set(state => ({
         board: newBoard,
-        winner: null,
-        winningLine: null
-      })
+        winner: botResult.winner,
+        winningLine: botResult.line,
+        score: state.score - 1,
+        streak: 0,
+        gamesPlayed: state.gamesPlayed + 1 // เพิ่มจำนวนเกมเมื่อ bot ชนะ
+      }))
       return
     }
-    
+
+    // เช็คเกมเสมอหลังจาก bot เดิน
+    if (newBoard.every(square => square !== null)) {
+      set(state => ({
+        board: newBoard,
+        winner: null,
+        winningLine: null,
+        gamesPlayed: state.gamesPlayed + 1 // เพิ่มจำนวนเกมเมื่อเสมอ
+      }))
+      return
+    }
+
+    // ถ้าเกมยังไม่จบ
     set({
       board: newBoard,
-      winner: botResult.winner,
-      winningLine: botResult.line,
-      score: state.score + (botResult.winner === "O" ? -1 : 0),
-      streak: botResult.winner === "O" ? 0 : state.streak
+      currentPlayer: "X"
     })
   },
 
   resetGame: () => {
-    set({
+    set(state => ({
       board: Array(9).fill(null),
       currentPlayer: "X",
       winner: null,
       winningLine: null
-    })
+      // ไม่ต้องรีเซ็ต gamesPlayed
+    }))
   }
 }))
 

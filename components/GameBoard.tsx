@@ -29,13 +29,14 @@ export function GameBoard({ user }) {
 
   const [stats, setStats] = useState({
     total_score: 0,
-    total_games: 0
+    total_games: 0,
+    current_rank: 'Bronze'
   })
 
   const [leaderboard, setLeaderboard] = useState([])
   const supabase = createClientComponentClient()
 
-  // เพิ่ม state เพื่อติดตามอัพเดทสถิติของเกมปัจจุบันแล้วหรือยัง
+  // เพิ่ม state เพื่อติดตามอัพดทสถิติของเกมปัจจุบันแล้วหรือยัง
   const [hasUpdated, setHasUpdated] = useState(false)
 
   // เพิ่ม useEffect สำหรับดึงข้อมูลเริ่มต้น
@@ -49,7 +50,8 @@ export function GameBoard({ user }) {
         console.log("Setting stats with:", result.data) // debug
         setStats({
           total_score: result.data.total_score || 0,
-          total_games: result.data.total_games || 0
+          total_games: result.data.total_games || 0,
+          current_rank: result.data.current_rank || 'Bronze'
         })
       } else {
         console.error("Failed to fetch stats:", result) // debug error
@@ -95,7 +97,7 @@ export function GameBoard({ user }) {
     } else if (board.every(square => square !== null)) {
       toast({
         title: "🤝 เสมอ!",
-        description: "เกมที่สนุกมาก",
+        description: "เกมี่สนุกมาก",
       })
     }
   }, [winner, board, streak, toast])
@@ -120,7 +122,15 @@ export function GameBoard({ user }) {
         const result = await updateGameStats(newStats)
         
         if (result.success) {
-          setStats(newStats)
+          // ดึงข้อมูลใหม่หลังจากอัพเดท เพื่อให้ได้ current_rank ที่ถูกต้อง
+          const updatedStats = await getGameStats()
+          if (updatedStats.success && updatedStats.data) {
+            setStats({
+              total_score: updatedStats.data.total_score,
+              total_games: updatedStats.data.total_games,
+              current_rank: updatedStats.data.current_rank
+            })
+          }
           setHasUpdated(true)
         } else {
           toast({
@@ -142,6 +152,42 @@ export function GameBoard({ user }) {
     }
   }, [winner, board])
 
+  // เพิ่มฟังก์ชันสำหรับกำหนดสีตามแรงค์
+  const getRankColor = (rank: string) => {
+    switch (rank) {
+      case 'Immortal God':
+        return 'text-red-600';
+      case 'Diamond':
+        return 'text-blue-500';
+      case 'Platinum':
+        return 'text-cyan-500';
+      case 'Gold':
+        return 'text-yellow-500';
+      case 'Silver':
+        return 'text-gray-400';
+      default:
+        return 'text-amber-700'; // Bronze
+    }
+  }
+
+  // เพิ่มฟังก์ชันสำหรับ emoji ตามแรงค์
+  const getRankEmoji = (rank: string) => {
+    switch (rank) {
+      case 'Immortal God':
+        return ''; // ดาบคู่
+      case 'Diamond':
+        return ''; // ดาบแฟนตาซี
+      case 'Platinum':
+        return ''; // มีดสั้น
+      case 'Gold':
+        return ''; // ดาบคู่
+      case 'Silver':
+        return ''; // ดาบแฟนตาซี
+      default:
+        return ''; // มีดสั้น (Bronze)
+    }
+  }
+
   return (
     <div className="flex flex-col lg:flex-row gap-6 max-w-[1200px] w-full">
       {/* Stats Section */}
@@ -152,6 +198,13 @@ export function GameBoard({ user }) {
             <CardTitle className="text-base font-medium text-gray-800">สถิติของคุณ</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 p-4">
+            <div>
+              <p className="text-xs text-gray-500"> 🗡️ แรงค์ปัจจุบัน</p>
+              <p className={`text-sm font-medium ${getRankColor(stats.current_rank)} flex items-center gap-2`}>
+                <span>{getRankEmoji(stats.current_rank)}</span>
+                <span>{stats.current_rank}</span>
+              </p>
+            </div>
             <div>
               <p className="text-xs text-gray-500">คะแนนรวมทั้งหมด</p>
               <p className="text-sm font-medium text-gray-700">{stats.total_score} คะแนน</p>

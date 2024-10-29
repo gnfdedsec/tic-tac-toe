@@ -15,7 +15,7 @@ export async function getGameStats() {
     // ดึงข้อมูลโดยตรงโดยไม่ใช้ upsert
     const { data, error } = await supabase
       .from('game_stats')
-      .select('total_score, total_games')
+      .select('total_score, total_games, current_rank')
       .eq('id', session.user.id)
       .single()
 

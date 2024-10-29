@@ -34,10 +34,10 @@ export default function Home() {
   }
 
   return (
-    <main className="flex flex-col items-center justify-center bg-gray-50 min-h-screen">
+    <main className="flex flex-col bg-gray-50 min-h-screen">
       <Header user={user} />
       
-      <div className="container mx-auto p-8">
+      <div className="container mx-auto p-8 flex-1">
         <h1 className="text-4xl font-krub font-semibold text-center mb-8 text-gray-600">
           เกมส์ Tic Tac Toe
         </h1>

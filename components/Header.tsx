@@ -35,15 +35,30 @@ export const Header = ({ user }: HeaderProps) => {
       </div>
 
       {/* User Section */}
-      <div className="flex items-center gap-6 pr-4">
+      <div className="flex items-center gap-3 pr-20">
+        {/* Email */}
         <span className="text-gray-600 text-base font-medium">
           {user.email}
         </span>
-        <img 
-          src={user.user_metadata.avatar_url || user.email} 
-          alt="User avatar"
-          className="w-10 h-10 rounded-full"
-        />
+        
+        {/* Avatar */}
+        {user.user_metadata?.avatar_url && (
+          <Image 
+            src={user.user_metadata.avatar_url}
+            alt={user.email || 'User avatar'}
+            width={40}
+            height={40}
+            className="rounded-full object-cover"
+            onError={(e) => {
+              // ใช้รูป avatar default จาก UI library หรือ free service
+              const target = e.target as HTMLImageElement;
+              target.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.email || 'U');
+              // หรือใช้ URL อื่นๆ เช่น
+              // target.src = 'https://www.gravatar.com/avatar/default?d=mp';
+            }}
+          />
+        )}
+        
         <button
           onClick={handleLogout}
           className="px-6 py-2 bg-red-500 text-white text-base rounded-md hover:bg-red-600 transition-colors flex items-center gap-3"

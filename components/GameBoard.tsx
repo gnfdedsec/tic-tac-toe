@@ -37,7 +37,7 @@ export function GameBoard() {
       if (winner === "X") {
         if (streak % 3 === 0) { // ทุกๆ 3 ครั้ง (3, 6, 9, ...)
           toast({
-            title: "🎉 ยินดีด้วย! คุณชนะ",
+            title: "🎉 ยินดีด���วย! คุณชนะ",
             description: `ชนะต่อเนื่อง ${streak} ครั้ง! ได้คะแนนโบนัสพิเศษ +1 คะแนน 🌟`,
           })
         } else if (streak % 3 === 2) { // ก่อนจะครบ 3 ครั้ง (2, 5, 8, ...)
@@ -134,18 +134,20 @@ export function GameBoard() {
       <div className="flex-1 max-w-2xl">
         <Card className="shadow-lg">
           <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100 pb-4">
-            <CardTitle className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-gray-800">Score: {score}</h2>
-              {(winner !== null || board.every(square => square !== null)) && (
-                <Button
-                  variant="outline"
-                  onClick={resetGame}
-                  className="flex items-center gap-2 px-4 h-9 hover:bg-gray-100"
-                >
-                  <RotateCw className="h-4 w-4" /> 
-                  <span className="font-medium">เริ่มเกมส์ใหม่</span>
-                </Button>
-              )}
+            <CardTitle>
+              <div className="flex items-center justify-between">
+                <span className="text-xl font-semibold text-gray-800">Score: {score}</span>
+                {(winner !== null || board.every(square => square !== null)) && (
+                  <Button
+                    variant="outline"
+                    onClick={resetGame}
+                    className="flex items-center gap-2 px-4 h-9 hover:bg-gray-100"
+                  >
+                    <RotateCw className="h-4 w-4" /> 
+                    <span className="font-medium">เริ่มเกมส์ใหม่</span>
+                  </Button>
+                )}
+              </div>
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col items-center gap-4 p-4">
@@ -176,7 +178,7 @@ export function GameBoard() {
           </CardHeader>
           <CardContent className="space-y-1">
             <ul className="list-disc list-inside text-sm text-gray-600">
-              <li>เลือกช่องที่ต้องการวาง X โดยการคลิก</li>
+              <li>ผู้เล่นลือกช่องที่ต้องการวาง X โดยการคลิก</li>
               <li>ชนะ: ได้ 1 คะแนน</li>
               <li>แพ้: เสีย 1 คะแนน</li>
               <li>ชนะ 3 ครั้งติดต่อกัน: ได้โบนัส 1 คะแนน</li>

@@ -17,8 +17,10 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-blue-100">
-      <div className="bg-white p-8 rounded-lg shadow-md">
+      <div className="bg-white p-8 rounded-lg shadow-md text-center">
+      <span className="text-5xl text-slate-500 text-center inline-block"> OX </span><span className="text-slate-400 text-center"> game </span>
         <div className="flex justify-center mb-6">
+      
           <img
             src="/images/logo/gamelogo.svg"
             alt="Tic tac toe game"

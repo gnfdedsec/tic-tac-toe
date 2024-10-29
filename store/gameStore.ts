@@ -1,5 +1,4 @@
 import { create } from "zustand"
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 type Player = "X" | "O"
 

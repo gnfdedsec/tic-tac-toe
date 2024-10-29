@@ -8,6 +8,7 @@ import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { getGameStats } from "@/app/actions/getStats"
 import useGameStore from "@/store/gameStore"
+import Head from 'next/head'
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null)
@@ -58,19 +59,25 @@ export default function Home() {
   }
 
   return (
-    <main className="flex flex-col bg-gray-50 min-h-screen">
-      <Header user={user} />
-      
-      <div className="container mx-auto p-8 flex-1">
-        <h1 className="text-4xl font-krub font-semibold text-center mb-8 text-gray-600">
-          เกมส์ Tic Tac Toe
-        </h1>
-        <div className="flex justify-center">
-          <GameBoard user={user} />
+    <>
+      <Head>
+        <title>Tic Tac Toe Game</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <main className="flex flex-col bg-gray-50 min-h-screen">
+        <Header user={user} />
+        
+        <div className="container mx-auto p-8 flex-1">
+          <h1 className="text-4xl font-krub font-semibold text-center mb-8 text-gray-600">
+            เกมส์ Tic Tac Toe
+          </h1>
+          <div className="flex justify-center">
+            <GameBoard user={user} />
+          </div>
         </div>
-      </div>
-      
-      <Footer />
-    </main>
+        
+        <Footer />
+      </main>
+    </>
   )
 }

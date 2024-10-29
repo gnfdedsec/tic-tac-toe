@@ -11,8 +11,14 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import Link from 'next/link'
 import { updateGameStats } from '@/app/actions/updateStats'
 import { getGameStats } from "@/app/actions/getStats"
+import { User } from '@supabase/auth-helpers-nextjs'
 
-export function GameBoard({ user }) {
+// หรือถ้าต้องการกำหนด interface เอง
+interface GameBoardProps {
+  user: User | null
+}
+
+export function GameBoard({ user }: GameBoardProps) {
   const { toast } = useToast()
   const {
     board,

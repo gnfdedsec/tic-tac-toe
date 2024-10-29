@@ -16,15 +16,27 @@ export async function updateGameStats(stats: GameStats) {
     const { data: { session } } = await supabase.auth.getSession()
     if (!session) throw new Error('ไม่พบข้อมูลผู้ใช้')
 
+    // เปลี่ยนจาก user_id เป็น id
+    const { data: currentStats } = await supabase
+      .from('game_stats')
+      .select('max_streak')
+      .eq('id', session.user.id)
+      .single()
+
+    const newMaxStreak = currentStats?.max_streak 
+      ? Math.max(currentStats.max_streak, stats.streak)
+      : stats.streak
+
+    // อัพเดทข้อมูล โดยใช้ id แทน user_id
     const { data, error } = await supabase
       .from('game_stats')
-      .update({
+      .upsert({
+        id: session.user.id, // เปลี่ยนจาก user_id เป็น id
         total_score: stats.total_score,
         total_games: stats.total_games,
-        max_streak: stats.streak, // อัพเดท max_streak ถ้ามากกว่าค่าเดิม
+        max_streak: newMaxStreak,
         updated_at: new Date().toISOString()
       })
-      .eq('id', session.user.id)
       .select()
 
     if (error) throw error

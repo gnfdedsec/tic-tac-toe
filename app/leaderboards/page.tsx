@@ -30,7 +30,7 @@ export default function Leaderboards() {
     fetchLeaderboard()
   }, [])
 
-  // ฟังก์ชันสำหรับกำหนดสีตามแรงค์
+  // Function to set color based on rank
   const getRankColor = (rank: string) => {
     switch (rank) {
       case 'Immortal God':
@@ -85,7 +85,7 @@ export default function Leaderboards() {
                             {index + 1 === 1 ? '🥇' : index + 1 === 2 ? '🥈' : '🥉'}
                           </span>
                         ) : (
-                          `#${index + 1}`
+                          <span className="px-2 text-xl">{index + 1}</span>
                         )}
                       </td>
                       <td className="px-2 sm:px-4 py-3 text-sm sm:text-base">{player.username}</td>

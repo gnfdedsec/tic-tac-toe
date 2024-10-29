@@ -217,6 +217,9 @@ export function GameBoard({ user }) {
               <Button 
                 variant="outline" 
                 className="w-full border-gray-300 hover:bg-gray-50 text-gray-700 text-sm flex items-center justify-center gap-2"
+                onClick={() => {
+                  resetGame() // เรียกใช้ resetGame ก่อนไปหน้า leaderboards
+                }}
               >
                 <span>🏆</span>
                 <span>ดูอันดับทั้งหมด</span>

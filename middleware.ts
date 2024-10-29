@@ -10,12 +10,12 @@ export async function middleware(req: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession()
 
-  // ถ้าไม่มี session (ไม่ได้ login) และพยายามเข้าถึงหน้าที่ต้อง auth
+  // If no session (not logged in) and trying to access protected page
   if (!session && req.nextUrl.pathname !== '/login') {
     return NextResponse.redirect(new URL('/login', req.url))
   }
 
-  // ถ้ามี session แล้วพยายามเข้าหน้า login
+  // If user has session and tries to access login page
   if (session && req.nextUrl.pathname === '/login') {
     return NextResponse.redirect(new URL('/', req.url))
   }
@@ -23,7 +23,7 @@ export async function middleware(req: NextRequest) {
   return res
 }
 
-// กำหนดว่าจะใช้ middleware กับ path ไหนบ้าง
+// Define which paths the middleware should be applied to
 export const config = {
   matcher: ['/', '/login']
 }

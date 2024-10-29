@@ -13,7 +13,7 @@ import { updateGameStats } from '@/app/actions/updateStats'
 import { getGameStats } from "@/app/actions/getStats"
 import { User } from '@supabase/auth-helpers-nextjs'
 
-// หรือถ้าต้องการกำหนด interface เอง
+// Or if you want to define your own interface
 interface GameBoardProps {
   user: User | null
 }
@@ -42,10 +42,10 @@ export function GameBoard({ user }: GameBoardProps) {
   const [leaderboard, setLeaderboard] = useState([])
   const supabase = createClientComponentClient()
 
-  // เพิ่ม state เพื่อติดตามอัพดทสถิติของเกมปัจจุบันแล้วหรือยัง
+  // Add state to track if current game stats have been updated
   const [hasUpdated, setHasUpdated] = useState(false)
 
-  // เพิ่ม useEffect สำหรับดึงข้อมูลเริ่มต้น
+  // Add useEffect to fetch initial data
   useEffect(() => {
     const fetchInitialStats = async () => {
       console.log("Fetching initial stats...") // debug
@@ -64,30 +64,30 @@ export function GameBoard({ user }: GameBoardProps) {
       }
     }
     
-    if (user?.id) { // เพิ่มเงื่อนไขให้รอจนกว่าจะมี user
+    if (user?.id) { // Wait until we have a user before fetching
       fetchInitialStats()
     }
-  }, [user]) // เพิ่ม user เป็น dependency
+  }, [user]) // Add user as dependency
 
-  // แสดง loading state ถ้ายังไม่มีข้อมูล
+  // Show loading state if no data
   useEffect(() => {
-    console.log("Current stats:", stats) // debug current stats
+    console.log("Current stats:", stats) // debug 
   }, [stats])
 
   useEffect(() => {
     if (winner) {
       if (winner === "X") {
-        if (streak % 3 === 0) { // ทุกๆ 3 ครั้ง (3, 6, 9, ...)
+        if (streak % 3 === 0) { // Every 3rd win (3, 6, 9, ...)
           toast({
             title: "🎉 ยินดีด้วย! คุณชนะ",
             description: `ชนะต่อเนื่อง ${streak} ครั้ง! ได้คะแนนโบนัสพิเศษ +1 คะแนน 🌟`,
           })
-        } else if (streak % 3 === 2) { // ก่อนจะครบ 3 ครั้ง (2, 5, 8, ...)
+        } else if (streak % 3 === 2) { // Before 3rd win (2, 5, 8, ...)
           toast({
             title: "🎉 คุณชนะ!",
             description: `ชนะต่อเนื่อง ${streak} ครั้ง อีก 1 ครั้งจะได้โบนัส! 🎯`,
           })
-        } else { // ครั้งอื่นๆ
+        } else { // Others
           toast({
             title: "🎉 คุณชนะ!",
             description: `ชนะต่อเนื่อง ${streak} ครั้ง`,
@@ -108,16 +108,16 @@ export function GameBoard({ user }: GameBoardProps) {
     }
   }, [winner, board, streak, toast])
 
-  // อัพเดทสถิติเมื่อจบเกม
+  // Update stats when game ends
   useEffect(() => {
     const updateStats = async () => {
       if ((winner || board.every(square => square !== null)) && !hasUpdated) {
         let scoreChange = 0;
         if (winner === 'X') {
-          scoreChange = 1; // ชนะ +1
+          scoreChange = 1; // Win +1
         } else if (winner === 'O') {
-          scoreChange = -1; // แพ้ -1
-        } // เสมอ +0
+          scoreChange = -1; // Lose -1
+        } // Draw +0
 
         const newStats = {
           total_score: stats.total_score + scoreChange,
@@ -128,7 +128,7 @@ export function GameBoard({ user }: GameBoardProps) {
         const result = await updateGameStats(newStats)
         
         if (result.success) {
-          // ดึงข้อมูลใหม่หลังจากอัพเดท เพื่อให้ได้ current_rank ที่ถูกต้อง
+          // update current_rank 
           const updatedStats = await getGameStats()
           if (updatedStats.success && updatedStats.data) {
             setStats({
@@ -151,14 +151,14 @@ export function GameBoard({ user }: GameBoardProps) {
     updateStats()
   }, [winner, board, streak, stats.total_score, stats.total_games, hasUpdated])
 
-  // รีเซ็ต hasUpdated เมื่อเริ่มเกมใหม่
+  // Reset hasUpdated when starting a new game
   useEffect(() => {
     if (!winner && !board.every(square => square !== null)) {
       setHasUpdated(false)
     }
   }, [winner, board])
 
-  // เพิ่มฟังก์ชันสำหรับกำหนดสีตามแรงค์
+  // color rank
   const getRankColor = (rank: string) => {
     switch (rank) {
       case 'Immortal God':
@@ -176,68 +176,29 @@ export function GameBoard({ user }: GameBoardProps) {
     }
   }
 
-  // เพิ่มฟังก์ชันสำหรับ emoji ตามแรงค์
+//rank icon ??
   const getRankEmoji = (rank: string) => {
     switch (rank) {
       case 'Immortal God':
-        return ''; // ดาบคู่
+        return ''; 
       case 'Diamond':
-        return ''; // ดาบแฟนตาซี
+        return ''; 
       case 'Platinum':
-        return ''; // มีดสั้น
+        return ''; 
       case 'Gold':
-        return ''; // ดาบคู่
+        return ''; 
       case 'Silver':
-        return ''; // ดาบแฟนตาซี
+        return ''; 
       default:
-        return ''; // มีดสั้น (Bronze)
+        return ''; 
     }
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 max-w-[1200px] w-full">
-      {/* Stats Section */}
-      <div className="w-full lg:w-80">
-        {/* Stats Card */}
-        <Card className="shadow-md hover:shadow-lg transition-shadow">
-          <CardHeader className="pb-2 border-b">
-            <CardTitle className="text-base font-medium text-gray-800">สถิติของคุณ</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 p-4">
-            <div>
-              <p className="text-xs text-gray-500"> 🗡️ แรงค์ปัจจุบัน</p>
-              <p className={`text-sm font-medium ${getRankColor(stats.current_rank)} flex items-center gap-2`}>
-                <span>{getRankEmoji(stats.current_rank)}</span>
-                <span>{stats.current_rank}</span>
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500">คะแนนรวมทั้งหมด</p>
-              <p className="text-sm font-medium text-gray-700">{stats.total_score} คะแนน</p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500">เกมที่เล่นทั้งหมด</p>
-              <p className="text-sm font-medium text-gray-700">{stats.total_games} เกม</p>
-            </div>
-            <Link href="/leaderboards" className="block mt-2">
-              <Button 
-                variant="outline" 
-                className="w-full border-gray-300 hover:bg-gray-50 text-gray-700 text-sm flex items-center justify-center gap-2"
-                onClick={() => {
-                  resetGame() // เรียกใช้ resetGame ก่อนไปหน้า leaderboards
-                }}
-              >
-                <span>🏆</span>
-                <span>ดูอันดับทั้งหมด</span>
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-[1200px] w-full">
       {/* Game Board Section */}
-      <div className="flex-1 max-w-2xl">
-        <Card className="shadow-lg">
+      <div className="lg:col-span-8 lg:order-2 order-1">
+        <Card className="shadow-lg mb-6 lg:mb-4">
           <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100 pb-4">
             <CardTitle>
               <div className="flex items-center justify-between">
@@ -279,8 +240,49 @@ export function GameBoard({ user }: GameBoardProps) {
             </p>
           </CardContent>
         </Card>
+      </div>
 
-        <Card className="mt-4 bg-gray-50 shadow-md">
+      {/* Stats Section */}
+      <div className="lg:col-span-4 lg:order-1 order-2">
+        <Card className="shadow-md hover:shadow-lg transition-shadow mb-6 lg:mb-0">
+          <CardHeader className="pb-2 border-b">
+            <CardTitle className="text-base font-medium text-gray-800">สถิติของคุณ</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 p-4">
+            <div>
+              <p className="text-xs text-gray-500"> 🗡️ แรงค์ปัจจุบัน</p>
+              <p className={`text-sm font-medium ${getRankColor(stats.current_rank)} flex items-center gap-2`}>
+                <span>{getRankEmoji(stats.current_rank)}</span>
+                <span>{stats.current_rank}</span>
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">คะแนนรวมทั้งหมด</p>
+              <p className="text-sm font-medium text-gray-700">{stats.total_score} คะแนน</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">เกมที่เล่นทั้งหมด</p>
+              <p className="text-sm font-medium text-gray-700">{stats.total_games} เกม</p>
+            </div>
+            <Link href="/leaderboards" className="block mt-2">
+              <Button 
+                variant="outline" 
+                className="w-full border-gray-300 hover:bg-gray-50 text-gray-700 text-sm flex items-center justify-center gap-2"
+                onClick={() => {
+                  resetGame() // Call resetGame before navigating to leaderboards
+                }}
+              >
+                <span>🏆</span>
+                <span>ดูอันดับทั้งหมด</span>
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Rules Section */}
+      <div className="lg:col-span-8 lg:col-start-5 lg:order-3 order-3">
+        <Card className="bg-gray-50 shadow-md">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-semibold text-gray-800">กติกาการเล่น</CardTitle>
           </CardHeader>

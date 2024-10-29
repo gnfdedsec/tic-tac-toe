@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
-// กำหนด interface สำหรับข้อมูลผู้เล่น
+// Define interface for player data
 interface PlayerStats {
   username: string
   current_rank: string
@@ -16,7 +16,7 @@ interface PlayerStats {
 }
 
 export default function LeaderboardPage() {
-  // กำหนด type ให้กับ state
+  // Define type for state
   const [leaderboard, setLeaderboard] = useState<PlayerStats[]>([])
   const supabase = createClientComponentClient()
 
@@ -39,7 +39,7 @@ export default function LeaderboardPage() {
     fetchLeaderboard()
   }, [supabase])
 
-  // เพิ่มฟังก์ชันสำหรับกำหนดสีตามแรงค์
+  // Function to set color based on rank
   const getRankColor = (rank: string) => {
     switch (rank) {
       case 'Immortal God':
@@ -71,7 +71,7 @@ export default function LeaderboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-xl md:text-4xl font-bold text-center">🏆 อันดับนักเล่นเกมส์ TIC TAE TOE</CardTitle>
+            <CardTitle className="text-xl md:text-4xl font-bold text-center">🏆 อันดับสุดยอดนักเล่นเกมส์ TIC TAE TOE</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">

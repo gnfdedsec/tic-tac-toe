@@ -88,13 +88,13 @@ export function GameBoard({ user }: GameBoardProps) {
           toast({
             title: "🎉 คุณชนะ!",
             description: `ชนะต่อเนื่อง ${streak} ครั้ง อีก 1 ครั้งจะได้โบนัส! 🎯`,
-            className: "font-krub [&>div>h1]:text-xl [&>div>h1]:font-bold"
+        
           })
         } else {
           toast({
             title: "🎉 คุณชนะ!",
             description: `ชนะต่อเนื่อง ${streak} ครั้ง`,
-            className: "font-krub [&>div>h1]:text-xl [&>div>h1]:font-bold"
+          
           })
         }
       } else if (winner === "O") {
@@ -102,14 +102,14 @@ export function GameBoard({ user }: GameBoardProps) {
           title: "😔 บอทชนะ!",
           description: "โชคดีในครั้งหน้านะ",
           variant: "destructive",
-          className: "font-krub [&>div>h1]:text-xl [&>div>h1]:font-bold"
+          className: "bg-red-500 text-white border-red-600 font-krub"
         })
       }
     } else if (board.every(square => square !== null)) {
       toast({
         title: "🤝 เสมอ!",
-        description: "เกมี่สนุกมาก",
-        className: "font-krub [&>div>h1]:text-xl [&>div>h1]:font-bold"
+        description: "เกมที่สนุกมาก",
+    
       })
     }
   }, [winner, board, streak, toast])
@@ -240,7 +240,7 @@ export function GameBoard({ user }: GameBoardProps) {
                 ? `ผู้ชนะ: ${winner}`
                 : board.every((square) => square !== null)
                 ? "เสมอ!"
-                : `ผู้เล่นปัจจุบัน: ${currentPlayer}`}
+                : `ผู้เล่น คือ : ${currentPlayer}`}
               <span className="ml-2 text-gray-500">
                 (เกมที่ {gamesPlayed + (winner || board.every(square => square !== null) ? 0 : 1)})
               </span>

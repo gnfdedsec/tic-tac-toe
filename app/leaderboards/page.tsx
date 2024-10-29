@@ -78,11 +78,11 @@ export default function LeaderboardPage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
-                    <th className="px-4 py-3 text-left">อันดับ</th>
-                    <th className="px-4 py-3 text-left">ชื่อผู้เล่น</th>
-                    <th className="px-4 py-3 text-left">แรงค์</th>
-                    <th className="px-4 py-3 text-right">คะแนน</th>
-                    <th className="px-4 py-3 text-right">เกมที่เล่น</th>
+                    <th className="px-4 py-3 text-left font-semibold text-base md:text-lg">อันดับ</th>
+                    <th className="px-4 py-3 text-left font-semibold text-base md:text-lg">ชื่อผู้เล่น</th>
+                    <th className="px-4 py-3 text-left font-semibold text-base md:text-lg">แรงค์</th>
+                    <th className="px-4 py-3 text-right font-semibold text-base md:text-lg">คะแนน</th>
+                    <th className="px-4 py-3 text-right font-semibold text-base md:text-lg">เกมที่เล่น</th>
                   </tr>
                 </thead>
                 <tbody>

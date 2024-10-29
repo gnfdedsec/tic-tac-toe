@@ -77,20 +77,24 @@ export function GameBoard({ user }: GameBoardProps) {
   useEffect(() => {
     if (winner) {
       if (winner === "X") {
-        if (streak % 3 === 0) { // Every 3rd win (3, 6, 9, ...)
+        if (streak % 3 === 0) {
           toast({
             title: "🎉 ยินดีด้วย! คุณชนะ",
             description: `ชนะต่อเนื่อง ${streak} ครั้ง! ได้คะแนนโบนัสพิเศษ +1 คะแนน 🌟`,
+            variant: "default",
+            className: "font-krub",
           })
-        } else if (streak % 3 === 2) { // Before 3rd win (2, 5, 8, ...)
+        } else if (streak % 3 === 2) {
           toast({
             title: "🎉 คุณชนะ!",
             description: `ชนะต่อเนื่อง ${streak} ครั้ง อีก 1 ครั้งจะได้โบนัส! 🎯`,
+            className: "font-krub [&>div>h1]:text-xl [&>div>h1]:font-bold"
           })
-        } else { // Others
+        } else {
           toast({
             title: "🎉 คุณชนะ!",
             description: `ชนะต่อเนื่อง ${streak} ครั้ง`,
+            className: "font-krub [&>div>h1]:text-xl [&>div>h1]:font-bold"
           })
         }
       } else if (winner === "O") {
@@ -98,12 +102,14 @@ export function GameBoard({ user }: GameBoardProps) {
           title: "😔 บอทชนะ!",
           description: "โชคดีในครั้งหน้านะ",
           variant: "destructive",
+          className: "font-krub [&>div>h1]:text-xl [&>div>h1]:font-bold"
         })
       }
     } else if (board.every(square => square !== null)) {
       toast({
         title: "🤝 เสมอ!",
         description: "เกมี่สนุกมาก",
+        className: "font-krub [&>div>h1]:text-xl [&>div>h1]:font-bold"
       })
     }
   }, [winner, board, streak, toast])
@@ -143,6 +149,7 @@ export function GameBoard({ user }: GameBoardProps) {
             title: "เกิดข้อผิดพลาด",
             description: "ไม่สามารถอัพเดทสถิติได้",
             variant: "destructive",
+            className: "font-krub [&>div>h1]:text-xl [&>div>h1]:font-bold"
           })
         }
       }
@@ -246,23 +253,25 @@ export function GameBoard({ user }: GameBoardProps) {
       <div className="lg:col-span-4 lg:order-1 order-2">
         <Card className="shadow-md hover:shadow-lg transition-shadow mb-6 lg:mb-0">
           <CardHeader className="pb-2 border-b">
-            <CardTitle className="text-base font-medium text-gray-800 flex items-center gap-2"><Icon icon="mdi:person-details-outline" />สถิติของคุณ</CardTitle>
+            <CardTitle className="text-xl md:text-2xl font-medium text-gray-800 flex items-center gap-2">
+              <Icon icon="mdi:person-details-outline" />สถิติของคุณ
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 p-4">
             <div>
-              <p className="text-xs text-gray-500"> 🗡️ แรงค์ปัจจุบัน</p>
-              <p className={`text-sm font-medium ${getRankColor(stats.current_rank)} flex items-center gap-2`}>
+              <p className="text-sm text-gray-500"> 🗡️ แรงค์ปัจจุบัน</p>
+              <p className={`text-base md:text-lg font-medium ${getRankColor(stats.current_rank)} flex items-center gap-2`}>
                 <span>{getRankEmoji(stats.current_rank)}</span>
                 <span>{stats.current_rank}</span>
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-500">คะแนนรวมทั้งหมด</p>
-              <p className="text-sm font-medium text-gray-700">{stats.total_score} คะแนน</p>
+              <p className="text-sm text-gray-500">คะแนนรวมทั้งหมด</p>
+              <p className="text-base md:text-lg font-medium text-gray-700">{stats.total_score} คะแนน</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500">เกมที่เล่นทั้งหมด</p>
-              <p className="text-sm font-medium text-gray-700">{stats.total_games} เกม</p>
+              <p className="text-sm text-gray-500">เกมที่เล่นทั้งหมด</p>
+              <p className="text-base md:text-lg font-medium text-gray-700">{stats.total_games} เกม</p>
             </div>
             <Link href="/leaderboards" className="block mt-2">
               <Button 
@@ -284,10 +293,12 @@ export function GameBoard({ user }: GameBoardProps) {
       <div className="lg:col-span-8 lg:col-start-5 lg:order-3 order-3">
         <Card className="bg-gray-50 shadow-md">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2"><Icon icon="fluent:pen-sparkle-32-light" />กติกาการเล่น</CardTitle>
+            <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+              <Icon icon="fluent:pen-sparkle-32-light" />กติกาการเล่น
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-1">
-            <ul className="list-disc list-inside text-sm text-gray-600">
+            <ul className="list-disc list-inside text-base md:text-base text-gray-800 space-y-2">
               <li>ผู้เล่นลือกช่องที่ต้องการวาง X โดยการคลิก</li>
               <li>ชนะ: ได้ 1 คะแนน</li>
               <li>แพ้: เสีย 1 คะแนน</li>

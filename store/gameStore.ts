@@ -85,7 +85,6 @@ const useGameStore = create<GameState>((set, get) => ({
     const { winner, line } = calculateWinner(newBoard)
     if (winner) {
       const newStreak = winner === "X" ? state.streak + 1 : 0
-      // ได้โบนัสทุกๆ 3 ครั้ง (3, 6, 9, ...)
       const bonusScore = winner === "X" && newStreak % 3 === 0 ? 1 : 0
 
       set({
@@ -98,20 +97,38 @@ const useGameStore = create<GameState>((set, get) => ({
       return
     }
 
-    // Bot's turn
-    if (!newBoard.every(square => square !== null)) {
-      const botMove = getBotMove(newBoard)
-      newBoard[botMove] = "O"
-      const botResult = calculateWinner(newBoard)
-      
+    // เช็คเกมเสมอหลังจากผู้เล่นเดิน
+    if (newBoard.every(square => square !== null)) {
       set({
         board: newBoard,
-        winner: botResult.winner,
-        winningLine: botResult.line,
-        score: state.score + (botResult.winner === "O" ? -1 : 0),
-        streak: botResult.winner === "O" ? 0 : state.streak
+        winner: null,
+        winningLine: null
       })
+      return
     }
+
+    // Bot's turn
+    const botMove = getBotMove(newBoard)
+    newBoard[botMove] = "O"
+    const botResult = calculateWinner(newBoard)
+    
+    // เช็คเกมเสมอหลังจาก bot เดิน
+    if (!botResult.winner && newBoard.every(square => square !== null)) {
+      set({
+        board: newBoard,
+        winner: null,
+        winningLine: null
+      })
+      return
+    }
+    
+    set({
+      board: newBoard,
+      winner: botResult.winner,
+      winningLine: botResult.line,
+      score: state.score + (botResult.winner === "O" ? -1 : 0),
+      streak: botResult.winner === "O" ? 0 : state.streak
+    })
   },
 
   resetGame: () => {

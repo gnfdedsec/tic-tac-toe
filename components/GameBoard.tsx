@@ -58,7 +58,7 @@ export function GameBoard() {
           variant: "destructive",
         })
       }
-    } else if (board.every((square) => square !== null)) {
+    } else if (board.every(square => square !== null)) {
       toast({
         title: "🤝 เสมอ!",
         description: "เกมที่สนุกมาก",
@@ -136,14 +136,16 @@ export function GameBoard() {
           <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100 pb-4">
             <CardTitle className="flex items-center justify-between">
               <h2 className="text-xl font-semibold text-gray-800">Score: {score}</h2>
-              <Button
-                variant="outline"
-                onClick={resetGame}
-                className="flex items-center gap-2 px-4 h-9 hover:bg-gray-100"
-              >
-                <RotateCw className="h-4 w-4" /> 
-                <span className="font-medium">เริ่มเกมส์ใหม่</span>
-              </Button>
+              {(winner !== null || board.every(square => square !== null)) && (
+                <Button
+                  variant="outline"
+                  onClick={resetGame}
+                  className="flex items-center gap-2 px-4 h-9 hover:bg-gray-100"
+                >
+                  <RotateCw className="h-4 w-4" /> 
+                  <span className="font-medium">เริ่มเกมส์ใหม่</span>
+                </Button>
+              )}
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col items-center gap-4 p-4">

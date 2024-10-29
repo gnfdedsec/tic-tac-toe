@@ -1,14 +1,23 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState, useEffect } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
-export default function Leaderboards() {
-  const [leaderboard, setLeaderboard] = useState([])
+// กำหนด interface สำหรับข้อมูลผู้เล่น
+interface PlayerStats {
+  username: string
+  current_rank: string
+  total_score: number
+  total_games: number
+}
+
+export default function LeaderboardPage() {
+  // กำหนด type ให้กับ state
+  const [leaderboard, setLeaderboard] = useState<PlayerStats[]>([])
   const supabase = createClientComponentClient()
 
   useEffect(() => {
@@ -17,7 +26,7 @@ export default function Leaderboards() {
         .from('game_stats')
         .select('username, current_rank, total_score, total_games')
         .order('total_score', { ascending: false })
-        .limit(20)
+        .limit(100)
 
       if (error) {
         console.error('Error fetching leaderboard:', error)
@@ -28,23 +37,23 @@ export default function Leaderboards() {
     }
 
     fetchLeaderboard()
-  }, [])
+  }, [supabase])
 
-  // Function to set color based on rank
+  // เพิ่มฟังก์ชันสำหรับกำหนดสีตามแรงค์
   const getRankColor = (rank: string) => {
     switch (rank) {
       case 'Immortal God':
-        return 'text-red-600';
+        return 'text-red-600'
       case 'Diamond':
-        return 'text-blue-500';
+        return 'text-blue-500'
       case 'Platinum':
-        return 'text-cyan-500';
+        return 'text-cyan-500'
       case 'Gold':
-        return 'text-yellow-500';
+        return 'text-yellow-500'
       case 'Silver':
-        return 'text-gray-400';
+        return 'text-gray-400'
       default:
-        return 'text-amber-700'; // Bronze
+        return 'text-amber-700' // Bronze
     }
   }
 
@@ -62,40 +71,40 @@ export default function Leaderboards() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-xl md:text-2xl font-bold text-center">🏆 อันดับนักเล่นเกมส์ TIC TAE TOE</CardTitle>
+            <CardTitle className="text-xl md:text-4xl font-bold text-center">🏆 อันดับนักเล่นเกมส์ TIC TAE TOE</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto -mx-4 sm:mx-0">
+            <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
-                    <th className="px-2 sm:px-4 py-3 text-left text-sm sm:text-base">อันดับ</th>
-                    <th className="px-2 sm:px-4 py-3 text-left text-sm sm:text-base">ชื่อผู้เล่น</th>
-                    <th className="px-2 sm:px-4 py-3 text-left text-sm sm:text-base">แรงค์</th>
-                    <th className="px-2 sm:px-4 py-3 text-right text-sm sm:text-base">คะแนน</th>
-                    <th className="hidden sm:table-cell px-2 sm:px-4 py-3 text-right text-sm sm:text-base">เกมที่เล่น</th>
+                    <th className="px-4 py-3 text-left">อันดับ</th>
+                    <th className="px-4 py-3 text-left">ชื่อผู้เล่น</th>
+                    <th className="px-4 py-3 text-left">แรงค์</th>
+                    <th className="px-4 py-3 text-right">คะแนน</th>
+                    <th className="px-4 py-3 text-right">เกมที่เล่น</th>
                   </tr>
                 </thead>
                 <tbody>
                   {leaderboard.map((player, index) => (
                     <tr key={index} className="border-b hover:bg-gray-50">
-                      <td className="px-2 sm:px-4 py-3 text-sm sm:text-base">
+                      <td className="px-4 py-3">
                         {index + 1 <= 3 ? (
-                          <span className="text-lg sm:text-xl">
+                          <span className="text-xl">
                             {index + 1 === 1 ? '🥇' : index + 1 === 2 ? '🥈' : '🥉'}
                           </span>
                         ) : (
                           <span className="px-2 text-xl">{index + 1}</span>
                         )}
                       </td>
-                      <td className="px-2 sm:px-4 py-3 text-sm sm:text-base">{player.username}</td>
-                      <td className={`px-2 sm:px-4 py-3 text-sm sm:text-base ${getRankColor(player.current_rank)}`}>
+                      <td className="px-4 py-3">{player.username}</td>
+                      <td className={`px-4 py-3 ${getRankColor(player.current_rank)}`}>
                         {player.current_rank}
                       </td>
-                      <td className="px-2 sm:px-4 py-3 text-right font-medium text-sm sm:text-base">
+                      <td className="px-4 py-3 text-right font-medium">
                         {player.total_score}
                       </td>
-                      <td className="hidden sm:table-cell px-2 sm:px-4 py-3 text-right text-gray-600 text-sm sm:text-base">
+                      <td className="px-4 py-3 text-right text-gray-600">
                         {player.total_games}
                       </td>
                     </tr>

@@ -145,6 +145,8 @@ export function GameBoard({ user }: GameBoardProps) {
               total_games: updatedStats.data.total_games,
               current_rank: updatedStats.data.current_rank
             })
+            // อัพเดท rank ใน store
+            useGameStore.getState().setCurrentRank(updatedStats.data.current_rank);
           }
           setHasUpdated(true)
         } else {
@@ -262,26 +264,26 @@ export function GameBoard({ user }: GameBoardProps) {
           </CardHeader>
           <CardContent className="space-y-3 p-4">
             <div>
-              <p className="text-sm text-gray-500"> 🗡️ แรงค์ปัจจุบัน</p>
-              <p className={`text-base md:text-lg font-medium ${getRankColor(stats.current_rank)} flex items-center gap-2`}>
+              <p className="text-sm text-gray-500 leading-relaxed"> 🗡️ แรงค์ปัจจุบัน</p>
+              <p className={`text-sm sm:text-base font-medium ${getRankColor(stats.current_rank)} flex items-center gap-2`}>
                 <span>{getRankEmoji(stats.current_rank)}</span>
                 <span>{stats.current_rank}</span>
               </p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">คะแนนรวมทั้งหมด</p>
-              <p className="text-base md:text-lg font-medium text-gray-700">{stats.total_score} คะแนน</p>
+              <p className="text-sm text-gray-500 leading-relaxed">คะแนนรวมทั้งหมด</p>
+              <p className="text-sm sm:text-base font-medium text-slate-500">{stats.total_score} คะแนน</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">เกมที่เล่นทั้งหมด</p>
-              <p className="text-base md:text-lg font-medium text-gray-700">{stats.total_games} เกม</p>
+              <p className="text-sm text-gray-500 leading-relaxed">เกมที่เล่นทั้งหมด</p>
+              <p className="text-sm sm:text-base font-medium text-slate-500">{stats.total_games} เกม</p>
             </div>
             <Link href="/leaderboards" className="block mt-2">
               <Button 
                 variant="outline" 
-                className="w-full border-gray-300 hover:bg-gray-50 text-gray-700 text-sm flex items-center justify-center gap-2"
+                className="w-full border-gray-300 bg-gray-50 hover:bg-blue-50 text-gray-700 text-sm flex items-center justify-center gap-2"
                 onClick={() => {
-                  resetGame() // Call resetGame before navigating to leaderboards
+                  resetGame()
                 }}
               >
                 <span>🏆</span>

@@ -83,8 +83,8 @@ export const Header = ({ user }: HeaderProps) => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="absolute top-full right-0 w-64 bg-white shadow-lg rounded-bl-md py-4 md:hidden">
-          <div className="px-4 py-2 border-b border-gray-200">
+        <div className="absolute top-full right-0 w-64 bg-white shadow-lg rounded-bl-md py-0 md:hidden">
+          <div className="px-4 py-0 border-b border-gray-200">
             {user.user_metadata?.avatar_url && (
               <div className="flex items-center gap-3 mb-2">
                 <Image 

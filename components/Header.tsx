@@ -29,8 +29,9 @@ export const Header = ({ user }: HeaderProps) => {
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-      router.refresh();
-      router.push('/login');
+      setIsMenuOpen(false);
+      await router.refresh();
+      await router.push('/login');
     } catch (error) {
       console.error('Error logging out:', error);
     }

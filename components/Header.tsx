@@ -2,7 +2,8 @@ import { User } from '@supabase/supabase-js';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getGameStats } from '@/app/actions/getStats';
 
 interface HeaderProps {
   user: User;
@@ -11,7 +12,19 @@ interface HeaderProps {
 export const Header = ({ user }: HeaderProps) => {
   const router = useRouter();
   const supabase = createClientComponentClient();
+  const [userRank, setUserRank] = useState('Bronze');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchRank = async () => {
+      const result = await getGameStats();
+      if (result.success && result.data) {
+        setUserRank(result.data.current_rank);
+      }
+    };
+    
+    fetchRank();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -20,6 +33,23 @@ export const Header = ({ user }: HeaderProps) => {
       router.push('/login');
     } catch (error) {
       console.error('Error logging out:', error);
+    }
+  };
+
+  const getRankColor = (rank: string) => {
+    switch (rank) {
+      case 'Immortal God':
+        return 'text-red-600';
+      case 'Diamond':
+        return 'text-blue-500';
+      case 'Platinum':
+        return 'text-cyan-500';
+      case 'Gold':
+        return 'text-yellow-500';
+      case 'Silver':
+        return 'text-gray-400';
+      default:
+        return 'text-amber-700'; // Bronze
     }
   };
 
@@ -84,7 +114,7 @@ export const Header = ({ user }: HeaderProps) => {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="absolute top-full right-0 w-64 bg-white shadow-lg rounded-bl-md py-0 md:hidden">
-          <div className="px-4 py-0 border-b border-gray-200">
+          <div className="px-4 py-3 border-b border-gray-200">
             {user.user_metadata?.avatar_url && (
               <div className="flex items-center gap-3 mb-2">
                 <Image 
@@ -98,13 +128,16 @@ export const Header = ({ user }: HeaderProps) => {
                     target.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.email || 'U');
                   }}
                 />
-                <span className="text-gray-600 text-sm truncate">{user.email}</span>
+                <div className="flex flex-col">
+                  <span className="text-gray-600 text-sm truncate">{user.email}</span>
+                  <span className="text-gray-600 text-sm"> Rank: <span className={`font-medium ${getRankColor(userRank)}`}>{userRank}</span></span>
+                </div>
               </div>
             )}
           </div>
           <button
             onClick={handleLogout}
-            className="w-full px-4 py-6 text-left text-red-500 hover:bg-red-50 transition-colors flex items-center gap-3"
+            className="w-full px-4 py-8 text-left text-red-500 hover:bg-red-50 transition-colors flex items-center gap-3"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />

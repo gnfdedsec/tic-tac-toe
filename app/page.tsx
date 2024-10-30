@@ -69,7 +69,7 @@ export default function Home() {
         
         <div className="container mx-auto p-8 flex-1">
           <h1 className="text-2xl md:text-4xl font-krub font-semibold text-left md:text-center mb-8 text-gray-600 flex items-center md:justify-center gap-1">
-          <Icon icon="material-symbols-light:background-dot-small-outline-sharp" />เกมส์ Tic Tac Toe   
+          <Icon icon="material-symbols-light:background-dot-small-outline-sharp" />เกม Tic Tac Toe   
           </h1>
           <div className="flex justify-center">
             <GameBoard user={user} />

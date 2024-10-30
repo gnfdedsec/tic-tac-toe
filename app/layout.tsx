@@ -11,7 +11,7 @@ const krub = Krub({
 });
 
 export const metadata: Metadata = {
-  title: ':: เกมส์ Tic Tac Toe Master ::',
+  title: ':: เกม  Tic Tac Toe Master : อี อาร์ ทิค แทค โทน',
   description: 'สร้างเกมส์ มันสนุก มันสนิท มันสุดยอด',
   icons: {
     icon: '/favicon.ico',

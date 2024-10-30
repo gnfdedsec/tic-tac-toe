@@ -68,7 +68,7 @@ export const Header = ({ user }: HeaderProps) => {
       </div>
 
       {/* Desktop Menu */}
-      <div className="hidden md:flex items-center gap-3 pr-20">
+      <div className="hidden lg:flex items-center gap-3 pr-20">
         <span className="text-gray-600 text-base font-medium">
           {user.email}
         </span>
@@ -105,7 +105,7 @@ export const Header = ({ user }: HeaderProps) => {
       {/* Hamburger Button */}
       <button 
         onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="md:hidden p-2"
+        className="lg:hidden p-2"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2">
           <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
@@ -114,7 +114,7 @@ export const Header = ({ user }: HeaderProps) => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="absolute top-full right-0 w-64 bg-white shadow-lg rounded-bl-md py-0 md:hidden">
+        <div className="absolute top-full right-0 w-64 bg-white shadow-lg rounded-bl-md py-0 lg:hidden">
           <div className="px-4 py-3 border-b border-gray-200">
             {user.user_metadata?.avatar_url && (
               <div className="flex items-center gap-3 mb-2">

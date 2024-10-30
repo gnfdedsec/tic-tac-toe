@@ -73,7 +73,7 @@ export default function LeaderboardPage() {
           <CardHeader>
             <CardTitle className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center">
               <div className="flex flex-col md:flex-row md:gap-2 md:items-center md:justify-center">
-                <div>🏆 อันดับสุดยอดนักเล่นเกมส์</div>
+                <div>🏆 อันดับสุดยอดนักเล่นเกม</div>
                 <div className="mt-2 md:mt-0">TIC TAE TOE</div>
               </div>
             </CardTitle>

@@ -230,7 +230,7 @@ export function GameBoard({ user }: GameBoardProps) {
                     className="flex items-center gap-2 px-4 h-9 hover:bg-gray-100"
                   >
                     <RotateCw className="h-4 w-4" /> 
-                    <span className="font-medium">เริ่มเกมส์ใหม่</span>
+                    <span className="font-medium">เริ่มเกมใหม่</span>
                   </Button>
                 )}
               </div>

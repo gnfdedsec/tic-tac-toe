@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Square } from "@/components/Square"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
@@ -74,9 +74,17 @@ export function GameBoard({ user }: GameBoardProps) {
     console.log("Current stats:", stats) // debug 
   }, [stats])
 
+  // เพิ่มฟังก์ชันเล่นเสียง
+  const playSound = useCallback((soundType: 'win' | 'lose' | 'draw') => {
+    const audio = new Audio(`/sounds/${soundType}.mp3`)
+    audio.volume = 0.5 // ปรับระดับเสียง 0-1
+    audio.play()
+  }, [])
+
   useEffect(() => {
     if (winner) {
       if (winner === "X") {
+        playSound('win')
         if (streak % 3 === 0) {
           toast({
             title: "🎉 ยินดีด้วย! คุณชนะ",
@@ -100,6 +108,7 @@ export function GameBoard({ user }: GameBoardProps) {
           })
         }
       } else if (winner === "O") {
+        playSound('lose')
         toast({
           title: "😔 บอทชนะ!",
           description: "โชคดีในครั้งหน้านะ",
@@ -108,6 +117,7 @@ export function GameBoard({ user }: GameBoardProps) {
         })
       }
     } else if (board.every(square => square !== null)) {
+      playSound('draw')
       toast({
         title: "🤝 เสมอ!",
         description: "เกมที่สนุกมาก",
@@ -115,7 +125,7 @@ export function GameBoard({ user }: GameBoardProps) {
         className: "font-krub"
       })
     }
-  }, [winner, board, streak, toast])
+  }, [winner, board, streak, toast, playSound])
 
   // Update stats when game ends
   useEffect(() => {

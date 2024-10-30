@@ -98,13 +98,13 @@ export const Header = ({ user }: HeaderProps) => {
                     target.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.email || 'U');
                   }}
                 />
-                <span className="text-gray-600 text-sm">{user.email}</span>
+                <span className="text-gray-600 text-sm truncate">{user.email}</span>
               </div>
             )}
           </div>
           <button
             onClick={handleLogout}
-            className="w-full px-4 py-2 text-left text-red-500 hover:bg-red-50 transition-colors flex items-center gap-3"
+            className="w-full px-4 py-6 text-left text-red-500 hover:bg-red-50 transition-colors flex items-center gap-3"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />

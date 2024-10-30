@@ -145,8 +145,6 @@ export function GameBoard({ user }: GameBoardProps) {
               total_games: updatedStats.data.total_games,
               current_rank: updatedStats.data.current_rank
             })
-            // อัพเดท rank ใน store
-            useGameStore.getState().setCurrentRank(updatedStats.data.current_rank);
           }
           setHasUpdated(true)
         } else {

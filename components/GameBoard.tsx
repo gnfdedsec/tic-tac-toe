@@ -256,7 +256,7 @@ export function GameBoard({ user }: GameBoardProps) {
       <div className="lg:col-span-4 lg:order-1 order-2">
         <Card className="shadow-md hover:shadow-lg transition-shadow mb-6 lg:mb-0">
           <CardHeader className="pb-2 border-b">
-            <CardTitle className="text-xl md:text-2xl font-medium text-gray-800 flex items-center gap-2">
+            <CardTitle className="text-lg font-semibold text-gray-600 flex items-center gap-2">
               <Icon icon="mdi:person-details-outline" />สถิติของคุณ
             </CardTitle>
           </CardHeader>
@@ -296,7 +296,7 @@ export function GameBoard({ user }: GameBoardProps) {
       <div className="lg:col-span-8 lg:col-start-5 lg:order-3 order-3">
         <Card className="bg-gray-50 shadow-md">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <CardTitle className="text-lg font-semibold text-gray-600 flex items-center gap-2">
               <Icon icon="fluent:pen-sparkle-32-light" />กติกาการเล่น
             </CardTitle>
           </CardHeader>

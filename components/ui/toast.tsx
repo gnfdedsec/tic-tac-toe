@@ -5,7 +5,13 @@ import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-const ToastProvider = ToastPrimitives.Provider
+const ToastProvider = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <ToastPrimitives.Provider duration={3000}>
+      {children}
+    </ToastPrimitives.Provider>
+  )
+}
 
 const ToastViewport = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Viewport>,

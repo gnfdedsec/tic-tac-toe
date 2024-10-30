@@ -15,14 +15,15 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-blue-100">
-      <div className="bg-white p-8 rounded-lg shadow-md text-center max-w-md w-11/12 animate-jump-in ">
+    <div className="min-h-[100vh] flex  justify-center bg-gradient-to-b from-blue-50 to-blue-100">
+      
+      <div className="bg-white p-4 rounded-lg shadow-md text-center max-w-md w-11/12 animate-jump-in ">
       <span className="text-5xl text-slate-500 text-center inline-block">  </span> 
         <div className="flex justify-center mb-6">
           <img
             src="/images/logo/logomaster.svg"
             alt="Tic tac toe game"
-            className="w-12/12 h-auto animate-jump-in"
+            className="pt-10 w-12/12 h-auto animate-jump-in"
           />
         </div>
         <h1 className="text-2xl font-krub font-semibold mb-6 text-center">เข้าสู่ระบบเพื่อเล่นเกม</h1>

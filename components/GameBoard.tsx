@@ -302,7 +302,7 @@ export function GameBoard({ user }: GameBoardProps) {
           </CardHeader>
           <CardContent className="space-y-1">
             <ul className="list-disc list-inside text-base md:text-base text-gray-800 space-y-2">
-              <li>ผู้เล่นลือกช่องที่ต้องการวาง X โดยการคลิก</li>
+              <li>ผู้เล่นเลือกช่องที่ต้องการวาง X โดยการคลิก</li>
               <li>ชนะ: ได้ 1 คะแนน</li>
               <li>แพ้: เสีย 1 คะแนน</li>
               <li>ชนะ 3 ครั้งติดต่อกัน: ได้โบนัส 1 คะแนน</li>

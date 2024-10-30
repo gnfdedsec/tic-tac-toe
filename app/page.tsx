@@ -51,7 +51,10 @@ export default function Home() {
   }, [router, supabase])
 
   if (isLoading) {
-    return <div className="flex items-center justify-center min-h-screen">กำลังโหลด...</div>
+    return <div className="flex items-center justify-center min-h-screen">
+      {/*<img src="/images/logo/gamelogo.svg" alt="Game Logo" className="w-8 h-8 mr-2" />*/}
+      กำลังโหลด...
+    </div>
   }
 
   if (!user) {

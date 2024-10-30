@@ -93,7 +93,7 @@ const useGameStore = create<GameState>((set, get) => ({
 
     const { winner, line } = calculateWinner(newBoard)
     
-    // ถ้าผู้เล่นชนะ
+    // If player wins
     if (winner === "X") {
       const newStreak = state.streak + 1
       const bonusScore = newStreak % 3 === 0 ? 1 : 0
@@ -104,18 +104,18 @@ const useGameStore = create<GameState>((set, get) => ({
         winningLine: line,
         score: state.score + 1 + bonusScore,
         streak: newStreak,
-        gamesPlayed: state.gamesPlayed + 1 // เพิ่มจำนวนเกมเมื่อจบเกม
+        gamesPlayed: state.gamesPlayed + 1 // Increment games played when game ends
       }))
       return
     }
 
-    // เช็คเกมเสมอหลังจากผู้เล่นเดิน
+    // Check for draw after player's move
     if (newBoard.every(square => square !== null)) {
       set(state => ({
         board: newBoard,
         winner: null,
         winningLine: null,
-        gamesPlayed: state.gamesPlayed + 1 // เพิ่มจำนวนเกมเมื่อเสมอ
+        gamesPlayed: state.gamesPlayed + 1 // Increment games played on draw
       }))
       return
     }
@@ -125,7 +125,7 @@ const useGameStore = create<GameState>((set, get) => ({
     newBoard[botMove] = "O"
     const botResult = calculateWinner(newBoard)
     
-    // ถ้า bot ชนะ
+    // If bot wins
     if (botResult.winner === "O") {
       set(state => ({
         board: newBoard,
@@ -133,23 +133,23 @@ const useGameStore = create<GameState>((set, get) => ({
         winningLine: botResult.line,
         score: state.score - 1,
         streak: 0,
-        gamesPlayed: state.gamesPlayed + 1 // เพิ่มจำนวนเกมเมื่อ bot ชนะ
+        gamesPlayed: state.gamesPlayed + 1 // Increment games played when bot wins
       }))
       return
     }
 
-    // เช็คเกมเสมอหลังจาก bot เดิน
+    // Check for draw after bot's move
     if (newBoard.every(square => square !== null)) {
       set(state => ({
         board: newBoard,
         winner: null,
         winningLine: null,
-        gamesPlayed: state.gamesPlayed + 1 // เพิ่มจำนวนเกมเมื่อเสมอ
+        gamesPlayed: state.gamesPlayed + 1 // Increment games played on draw
       }))
       return
     }
 
-    // ถ้าเกมยังไม่จบ
+    // If game is not over
     set({
       board: newBoard,
       currentPlayer: "X"
@@ -162,7 +162,7 @@ const useGameStore = create<GameState>((set, get) => ({
       currentPlayer: "X",
       winner: null,
       winningLine: null
-      // ไม่ต้องรีเซ็ต gamesPlayed
+      // Don't reset gamesPlayed
     }))
   }
 }))

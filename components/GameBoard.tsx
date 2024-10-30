@@ -81,20 +81,22 @@ export function GameBoard({ user }: GameBoardProps) {
           toast({
             title: "🎉 ยินดีด้วย! คุณชนะ",
             description: `ชนะต่อเนื่อง ${streak} ครั้ง! ได้คะแนนโบนัสพิเศษ +1 คะแนน 🌟`,
-            variant: "default",
-            className: "font-krub",
+            variant: "success",
+            className: "font-krub"
           })
         } else if (streak % 3 === 2) {
           toast({
             title: "🎉 คุณชนะ!",
             description: `ชนะต่อเนื่อง ${streak} ครั้ง อีก 1 ครั้งจะได้โบนัส! 🎯`,
-        
+            variant: "success",
+            className: "font-krub"
           })
         } else {
           toast({
             title: "🎉 คุณชนะ!",
             description: `ชนะแล้ว ${streak} ครั้ง เอาชนะให้ได้อีกนะ!`,
-          
+            variant: "success",
+            className: "font-krub"
           })
         }
       } else if (winner === "O") {
@@ -102,14 +104,15 @@ export function GameBoard({ user }: GameBoardProps) {
           title: "😔 บอทชนะ!",
           description: "โชคดีในครั้งหน้านะ",
           variant: "destructive",
-          className: "bg-red-500 text-white border-red-600 font-krub"
+          className: "font-krub"
         })
       }
     } else if (board.every(square => square !== null)) {
       toast({
         title: "🤝 เสมอ!",
         description: "เกมที่สนุกมาก",
-    
+        variant: "success",
+        className: "font-krub"
       })
     }
   }, [winner, board, streak, toast])

@@ -5,21 +5,7 @@ import type { NextRequest } from 'next/server'
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
   const supabase = createMiddlewareClient({ req, res })
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
-
-  // If no session (not logged in) and trying to access protected page
-  if (!session && req.nextUrl.pathname !== '/login') {
-    return NextResponse.redirect(new URL('/login', req.url))
-  }
-
-  // If user has session and tries to access login page
-  if (session && req.nextUrl.pathname === '/login') {
-    return NextResponse.redirect(new URL('/', req.url))
-  }
-
+  await supabase.auth.getSession()
   return res
 }
 

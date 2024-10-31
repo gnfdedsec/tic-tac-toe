@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from './ui/button';
 import { Icon } from '@iconify/react';
+import YouTube from 'react-youtube';
 
 export default function MusicPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);

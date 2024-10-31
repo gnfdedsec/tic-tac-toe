@@ -91,8 +91,10 @@ export function GameBoard({ user }: GameBoardProps) {
           toast({
             title: "🎉 ยินดีด้วย! คุณชนะ",
             description: `ชนะต่อเนื่อง ${streak} ครั้ง! ได้คะแนนโบนัสพิเศษ +1 คะแนน 🌟`,
-            variant: "success",
+            variant: "default",
             className: "font-krub cursor-pointer",
+            duration: 2000,
+            style: { backgroundColor: '#fcbe23' },
             onPointerUp: (e) => {
               e.preventDefault();
               dismiss();
@@ -102,8 +104,10 @@ export function GameBoard({ user }: GameBoardProps) {
           toast({
             title: "🎉 คุณชนะ!",
             description: `ชนะต่อเนื่อง ${streak} ครั้ง อีก 1 ครั้งจะได้โบนัส! 🎯`,
-            variant: "success",
+            variant: "default",
             className: "font-krub cursor-pointer",
+            duration: 2000,
+            style: { backgroundColor: '#fcbe23' },
             onPointerUp: (e) => {
               e.preventDefault();
               dismiss();
@@ -113,8 +117,10 @@ export function GameBoard({ user }: GameBoardProps) {
           toast({
             title: "🎉 คุณชนะ!",
             description: `ชนะแล้ว ${streak} ครั้ง เอาชนะให้ได้อีกนะ!`,
-            variant: "success",
+            variant: "default",
             className: "font-krub cursor-pointer",
+            duration: 2000,
+            style: { backgroundColor: '#fcbe23' },
             onPointerUp: (e) => {
               e.preventDefault();
               dismiss();
@@ -128,24 +134,26 @@ export function GameBoard({ user }: GameBoardProps) {
           description: "โชคดีในครั้งหน้านะ",
           variant: "destructive",
           className: "font-krub cursor-pointer",
+          duration: 2000,
+          onPointerUp: (e) => {
+            e.preventDefault();
+            dismiss();
+          }
+        })
+      } else if (board.every(square => square !== null)) {
+        playSound('draw')
+        toast({
+          title: "🤝 เสมอ!",
+          description: "เกมที่สนุกมาก",
+          variant: "default",
+          className: "font-krub cursor-pointer",
+          duration: 2000,
           onPointerUp: (e) => {
             e.preventDefault();
             dismiss();
           }
         })
       }
-    } else if (board.every(square => square !== null)) {
-      playSound('draw')
-      toast({
-        title: "🤝 เสมอ!",
-        description: "เกมที่สนุกมาก",
-        variant: "success",
-        className: "font-krub cursor-pointer",
-        onPointerUp: (e) => {
-          e.preventDefault();
-          dismiss();
-        }
-      })
     }
   }, [winner, board, streak, toast, playSound])
 

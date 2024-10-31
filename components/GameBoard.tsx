@@ -91,7 +91,10 @@ export function GameBoard({ user }: GameBoardProps) {
             description: `ชนะต่อเนื่อง ${streak} ครั้ง! ได้คะแนนโบนัสพิเศษ +1 คะแนน 🌟`,
             variant: "success",
             className: "font-krub cursor-pointer",
-            onClick: () => dismiss()
+            onPointerUp: (e) => {
+              e.preventDefault();
+              dismiss();
+            }
           })
         } else if (streak % 3 === 2) {
           toast({
@@ -99,7 +102,10 @@ export function GameBoard({ user }: GameBoardProps) {
             description: `ชนะต่อเนื่อง ${streak} ครั้ง อีก 1 ครั้งจะได้โบนัส! 🎯`,
             variant: "success",
             className: "font-krub cursor-pointer",
-            onClick: () => dismiss()
+            onPointerUp: (e) => {
+              e.preventDefault();
+              dismiss();
+            }
           })
         } else {
           toast({
@@ -107,7 +113,10 @@ export function GameBoard({ user }: GameBoardProps) {
             description: `ชนะแล้ว ${streak} ครั้ง เอาชนะให้ได้อีกนะ!`,
             variant: "success",
             className: "font-krub cursor-pointer",
-            onClick: () => dismiss()
+            onPointerUp: (e) => {
+              e.preventDefault();
+              dismiss();
+            }
           })
         }
       } else if (winner === "O") {
@@ -117,7 +126,10 @@ export function GameBoard({ user }: GameBoardProps) {
           description: "โชคดีในครั้งหน้านะ",
           variant: "destructive",
           className: "font-krub cursor-pointer",
-          onClick: () => dismiss()
+          onPointerUp: (e) => {
+            e.preventDefault();
+            dismiss();
+          }
         })
       }
     } else if (board.every(square => square !== null)) {
@@ -127,7 +139,10 @@ export function GameBoard({ user }: GameBoardProps) {
         description: "เกมที่สนุกมาก",
         variant: "success",
         className: "font-krub cursor-pointer",
-        onClick: () => dismiss()
+        onPointerUp: (e) => {
+          e.preventDefault();
+          dismiss();
+        }
       })
     }
   }, [winner, board, streak, toast, playSound])

@@ -353,7 +353,7 @@ export function GameBoard({ user }: GameBoardProps) {
         </div>
       </div>
       <ToastViewport 
-        className="fixed bottom-0 right-0 p-4 space-y-2"
+        className="fixed bottom-0 right-0 p-4 flex flex-col space-y-2"
       />
       <Toaster />
     </ToastProvider>

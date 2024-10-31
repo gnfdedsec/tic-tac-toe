@@ -143,7 +143,7 @@ export function GameBoard({ user }: GameBoardProps) {
       } else if (board.every(square => square !== null) && !winner) {
         playSound('draw')
         toast({
-          title: "🤝 เสอ!",
+          title: "🤝 เสมอ!",
           description: "เกมที่สนุกมาก",
           variant: "default",
           className: "font-krub cursor-pointer",

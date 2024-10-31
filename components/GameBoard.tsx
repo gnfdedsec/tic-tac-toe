@@ -76,7 +76,7 @@ export function GameBoard({ user }: GameBoardProps) {
     console.log("Current stats:", stats) // debug 
   }, [stats])
 
-  // เพิ่มฟังก์ชันเล่นเสียง
+  // พิ่มฟังก์ชันเล่นเสียง
   const playSound = useCallback((soundType: 'win' | 'lose' | 'draw') => {
     const audio = new Audio(`/sounds/${soundType}.mp3`)
     audio.volume = 0.5 // ปรับระดับเสียง 0-1
@@ -84,7 +84,7 @@ export function GameBoard({ user }: GameBoardProps) {
   }, [])
 
   useEffect(() => {
-    if (winner) {
+    if (winner || board.every(square => square !== null)) {
       if (winner === "X") {
         playSound('win')
         if (streak % 3 === 0) {
@@ -140,14 +140,15 @@ export function GameBoard({ user }: GameBoardProps) {
             dismiss();
           }
         })
-      } else if (board.every(square => square !== null)) {
+      } else if (board.every(square => square !== null) && !winner) {
         playSound('draw')
         toast({
-          title: "🤝 เสมอ!",
+          title: "🤝 เสอ!",
           description: "เกมที่สนุกมาก",
           variant: "default",
           className: "font-krub cursor-pointer",
           duration: 2000,
+          style: { backgroundColor: '#ffffff' },
           onPointerUp: (e) => {
             e.preventDefault();
             dismiss();
@@ -252,19 +253,23 @@ export function GameBoard({ user }: GameBoardProps) {
           <Card className="shadow-lg mb-6 lg:mb-4">
             <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100 pb-4">
               <CardTitle>
-                <div className="flex items-center justify-between">
-                  <span className="text-xl font-semibold text-gray-800">Score: {score}</span>
-                  {(winner !== null || board.every(square => square !== null)) && (
-                    <Button
-                      variant="outline"
-                      onClick={resetGame}
-                      className="flex items-center gap-2 px-4 h-9 hover:bg-gray-100"
-                    >
-                      <RotateCw className="h-4 w-4" /> 
-                      <span className="font-medium">เริ่มเกมใหม่</span>
-                    </Button>
-                  )}
-                </div>
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between w-full relative">
+  <div>
+    <span className="text-xl font-semibold text-gray-800">Score: {score}</span>
+    <span className="block lg:hidden text-xs text-gray-600 mt-1">คะแนนรวม: {stats.total_score}</span>
+  </div>
+  {(winner !== null || board.every(square => square !== null)) && (
+    <Button
+      variant="outline"
+      onClick={resetGame}
+      className="absolute top-2 right-2 flex items-center gap-2 px-4 h-9 hover:bg-gray-100"
+    >
+      <RotateCw className="h-4 w-4" />
+      <span className="font-medium">เริ่มเกมใหม่</span>
+    </Button>
+  )}
+</div>
+
               </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col items-center gap-4 p-4">

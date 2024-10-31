@@ -13,6 +13,8 @@ import { updateGameStats } from '@/app/actions/updateStats'
 import { getGameStats } from "@/app/actions/getStats"
 import { User } from '@supabase/auth-helpers-nextjs'
 import { Icon } from '@iconify/react';
+import { ToastProvider, ToastViewport } from "@/components/ui/toast"
+import { Toaster } from "@/components/ui/toaster"
 // Or if you want to define your own interface
 interface GameBoardProps {
   user: User | null
@@ -235,111 +237,115 @@ export function GameBoard({ user }: GameBoardProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-[1200px] w-full">
-      {/* Game Board Section */}
-      <div className="lg:col-span-8 lg:order-2 order-1">
-        <Card className="shadow-lg mb-6 lg:mb-4">
-          <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100 pb-4">
-            <CardTitle>
-              <div className="flex items-center justify-between">
-                <span className="text-xl font-semibold text-gray-800">Score: {score}</span>
-                {(winner !== null || board.every(square => square !== null)) && (
-                  <Button
-                    variant="outline"
-                    onClick={resetGame}
-                    className="flex items-center gap-2 px-4 h-9 hover:bg-gray-100"
-                  >
-                    <RotateCw className="h-4 w-4" /> 
-                    <span className="font-medium">เริ่มเกมใหม่</span>
-                  </Button>
-                )}
+    <ToastProvider>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-[1200px] w-full">
+        {/* Game Board Section */}
+        <div className="lg:col-span-8 lg:order-2 order-1">
+          <Card className="shadow-lg mb-6 lg:mb-4">
+            <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100 pb-4">
+              <CardTitle>
+                <div className="flex items-center justify-between">
+                  <span className="text-xl font-semibold text-gray-800">Score: {score}</span>
+                  {(winner !== null || board.every(square => square !== null)) && (
+                    <Button
+                      variant="outline"
+                      onClick={resetGame}
+                      className="flex items-center gap-2 px-4 h-9 hover:bg-gray-100"
+                    >
+                      <RotateCw className="h-4 w-4" /> 
+                      <span className="font-medium">เริ่มเกมใหม่</span>
+                    </Button>
+                  )}
+                </div>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center gap-4 p-4">
+              <div className="grid grid-cols-3 gap-2 w-full max-w-[360px]">
+                {board.map((value, index) => (
+                  <Square
+                    key={index}
+                    value={value}
+                    onClick={() => currentPlayer === "X" && makeMove(index)}
+                    isWinningSquare={winningLine?.includes(index)}
+                  />
+                ))}
               </div>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col items-center gap-4 p-4">
-            <div className="grid grid-cols-3 gap-2 w-full max-w-[360px]">
-              {board.map((value, index) => (
-                <Square
-                  key={index}
-                  value={value}
-                  onClick={() => currentPlayer === "X" && makeMove(index)}
-                  isWinningSquare={winningLine?.includes(index)}
-                />
-              ))}
-            </div>
 
-            <p className="text-base font-medium text-gray-700">
-              {winner
-                ? `ผู้ชนะ: ${winner}`
-                : board.every((square) => square !== null)
-                ? "เสมอ!"
-                : `ผู้เล่น คือ : ${currentPlayer}`}
-              <span className="ml-2 text-gray-500">
-                (เกมที่ {gamesPlayed + (winner || board.every(square => square !== null) ? 0 : 1)})
-              </span>
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Stats Section */}
-      <div className="lg:col-span-4 lg:order-1 order-2">
-        <Card className="shadow-md hover:shadow-lg transition-shadow mb-6 lg:mb-0">
-          <CardHeader className="pb-2 border-b">
-            <CardTitle className="text-lg font-semibold text-gray-600 flex items-center gap-2">
-              <Icon icon="mdi:person-details-outline" />สถิติของคุณ
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 p-4">
-            <div>
-              <p className="text-sm text-gray-500 leading-relaxed"> 🗡️ แรงค์ปัจจุบัน</p>
-              <p className={`text-sm sm:text-base font-medium ${getRankColor(stats.current_rank)} flex items-center gap-2`}>
-                <span>{getRankEmoji(stats.current_rank)}</span>
-                <span>{stats.current_rank}</span>
+              <p className="text-base font-medium text-gray-700">
+                {winner
+                  ? `ผู้ชนะ: ${winner}`
+                  : board.every((square) => square !== null)
+                  ? "เสมอ!"
+                  : `ผู้เล่น คือ : ${currentPlayer}`}
+                <span className="ml-2 text-gray-500">
+                  (เกมที่ {gamesPlayed + (winner || board.every(square => square !== null) ? 0 : 1)})
+                </span>
               </p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500 leading-relaxed">คะแนนรวมทั้งหมด</p>
-              <p className="text-sm sm:text-base font-medium text-slate-500">{stats.total_score} คะแนน</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500 leading-relaxed">เกมที่เล่นทั้งหมด</p>
-              <p className="text-sm sm:text-base font-medium text-slate-500">{stats.total_games} เกม</p>
-            </div>
-            <Link href="/leaderboards" className="block mt-2">
-              <Button 
-                variant="outline" 
-                className="w-full border-gray-300 bg-gray-50 hover:bg-blue-50 text-gray-700 text-sm flex items-center justify-center gap-2"
-                onClick={() => {
-                  resetGame()
-                }}
-              >
-                <span>🏆</span>
-                <span>ดูอันดับทั้งหมด</span>
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
+            </CardContent>
+          </Card>
+        </div>
 
-      {/* Rules Section */}
-      <div className="lg:col-span-8 lg:col-start-5 lg:order-3 order-3">
-        <Card className="bg-gray-50 shadow-md">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-semibold text-gray-600 flex items-center gap-2">
-              <Icon icon="fluent:pen-sparkle-32-light" />กติกาการเล่น
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-1">
-            <ul className="list-disc list-inside text-base md:text-base text-gray-800 space-y-2">
-              <li>ผู้เล่นเลือกช่องวาง X โดยการคลิก</li>
-              <li>ชนะ: ได้ 1 คะแนน</li>
-              <li>แพ้: เสีย 1 คะแนน</li>
-              <li>ชนะ 3 ครั้งติดต่อกัน: ไดโบนัส 1 คะแนน</li>
-            </ul>
-          </CardContent>
-        </Card>
+        {/* Stats Section */}
+        <div className="lg:col-span-4 lg:order-1 order-2">
+          <Card className="shadow-md hover:shadow-lg transition-shadow mb-6 lg:mb-0">
+            <CardHeader className="pb-2 border-b">
+              <CardTitle className="text-lg font-semibold text-gray-600 flex items-center gap-2">
+                <Icon icon="mdi:person-details-outline" />สถิติของคุณ
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 p-4">
+              <div>
+                <p className="text-sm text-gray-500 leading-relaxed"> 🗡️ แรงค์ปัจจุบัน</p>
+                <p className={`text-sm sm:text-base font-medium ${getRankColor(stats.current_rank)} flex items-center gap-2`}>
+                  <span>{getRankEmoji(stats.current_rank)}</span>
+                  <span>{stats.current_rank}</span>
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500 leading-relaxed">คะแนนรวมทั้งหมด</p>
+                <p className="text-sm sm:text-base font-medium text-slate-500">{stats.total_score} คะแนน</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500 leading-relaxed">เกมที่เล่นทั้งหมด</p>
+                <p className="text-sm sm:text-base font-medium text-slate-500">{stats.total_games} เกม</p>
+              </div>
+              <Link href="/leaderboards" className="block mt-2">
+                <Button 
+                  variant="outline" 
+                  className="w-full border-gray-300 bg-gray-50 hover:bg-blue-50 text-gray-700 text-sm flex items-center justify-center gap-2"
+                  onClick={() => {
+                    resetGame()
+                  }}
+                >
+                  <span>🏆</span>
+                  <span>ดูอันดับทั้งหมด</span>
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Rules Section */}
+        <div className="lg:col-span-8 lg:col-start-5 lg:order-3 order-3">
+          <Card className="bg-gray-50 shadow-md">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-semibold text-gray-600 flex items-center gap-2">
+                <Icon icon="fluent:pen-sparkle-32-light" />กติกาการเล่น
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-1">
+              <ul className="list-disc list-inside text-base md:text-base text-gray-800 space-y-2">
+                <li>ผู้เล่นเลือกช่องวาง X โดยการคลิก</li>
+                <li>ชนะ: ได้ 1 คะแนน</li>
+                <li>แพ้: เสีย 1 คะแนน</li>
+                <li>ชนะ 3 ครังติดต่อกัน: ไดโบนัส 1 คะแนน</li>
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
       </div>
-    </div>
+      <ToastViewport />
+      <Toaster />
+    </ToastProvider>
   )
 }

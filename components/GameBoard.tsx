@@ -19,7 +19,7 @@ interface GameBoardProps {
 }
 
 export function GameBoard({ user }: GameBoardProps) {
-  const { toast } = useToast()
+  const { toast, dismiss } = useToast()
   const {
     board,
     currentPlayer,
@@ -90,21 +90,24 @@ export function GameBoard({ user }: GameBoardProps) {
             title: "🎉 ยินดีด้วย! คุณชนะ",
             description: `ชนะต่อเนื่อง ${streak} ครั้ง! ได้คะแนนโบนัสพิเศษ +1 คะแนน 🌟`,
             variant: "success",
-            className: "font-krub"
+            className: "font-krub cursor-pointer",
+            onClick: () => dismiss()
           })
         } else if (streak % 3 === 2) {
           toast({
             title: "🎉 คุณชนะ!",
             description: `ชนะต่อเนื่อง ${streak} ครั้ง อีก 1 ครั้งจะได้โบนัส! 🎯`,
             variant: "success",
-            className: "font-krub"
+            className: "font-krub cursor-pointer",
+            onClick: () => dismiss()
           })
         } else {
           toast({
             title: "🎉 คุณชนะ!",
             description: `ชนะแล้ว ${streak} ครั้ง เอาชนะให้ได้อีกนะ!`,
             variant: "success",
-            className: "font-krub"
+            className: "font-krub cursor-pointer",
+            onClick: () => dismiss()
           })
         }
       } else if (winner === "O") {
@@ -113,7 +116,8 @@ export function GameBoard({ user }: GameBoardProps) {
           title: "😔 บอทชนะ!",
           description: "โชคดีในครั้งหน้านะ",
           variant: "destructive",
-          className: "font-krub"
+          className: "font-krub cursor-pointer",
+          onClick: () => dismiss()
         })
       }
     } else if (board.every(square => square !== null)) {
@@ -122,7 +126,8 @@ export function GameBoard({ user }: GameBoardProps) {
         title: "🤝 เสมอ!",
         description: "เกมที่สนุกมาก",
         variant: "success",
-        className: "font-krub"
+        className: "font-krub cursor-pointer",
+        onClick: () => dismiss()
       })
     }
   }, [winner, board, streak, toast, playSound])
@@ -315,7 +320,7 @@ export function GameBoard({ user }: GameBoardProps) {
               <li>ผู้เล่นเลือกช่องวาง X โดยการคลิก</li>
               <li>ชนะ: ได้ 1 คะแนน</li>
               <li>แพ้: เสีย 1 คะแนน</li>
-              <li>ชนะ 3 ครั้งติดต่อกัน: ได้โบนัส 1 คะแนน</li>
+              <li>ชนะ 3 ครั้งติดต่อกัน: ไดโบนัส 1 คะแนน</li>
             </ul>
           </CardContent>
         </Card>

@@ -41,6 +41,9 @@
     "@radix-ui/react-tooltip": "^1.1.2",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.45.6",
+    "@tsparticles/engine": "^3.5.0",
+    "@tsparticles/react": "^3.0.0",
+    "@tsparticles/slim": "^3.5.0",
     "@types/node": "20.6.2",
     "@types/react": "18.2.22",
     "@types/react-dom": "18.2.7",
@@ -54,6 +57,7 @@
     "embla-carousel-react": "^8.3.0",
     "eslint": "^9.13.0",
     "eslint-config-next": "15.0.1",
+    "framer-motion": "^11.11.11",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.446.0",
     "next": "15.0.1",
@@ -71,13 +75,16 @@
     "tailwind-merge": "^2.5.4",
     "tailwindcss": "3.3.3",
     "tailwindcss-animate": "^1.0.7",
+    "three": "0.134.0",
     "typescript": "5.2.2",
     "utf-8-validate": "^6.0.4",
+    "vanta": "^0.5.24",
     "vaul": "^0.9.9",
     "zod": "^3.23.8",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@types/three": "^0.169.0",
     "@typescript-eslint/eslint-plugin": "^8.12.2"
   }
 }

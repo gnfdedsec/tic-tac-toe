@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
+// กำหนด interface สำหรับ letter
+interface Letter {
+  char: string;
+  rotation: number;
+  transform: string;
+}
+
 const CircularText = ({ 
   text = "HELLO WORLD - HELLO WORLD - ", 
   radius = 100,
@@ -7,7 +14,8 @@ const CircularText = ({
   direction = 'clockwise',
   centerCircleSize = 40 // ขนาดของวงกลมตรงกลาง
 }) => {
-  const [letters, setLetters] = useState([]);
+  // กำหนด type ให้กับ state
+  const [letters, setLetters] = useState<Letter[]>([]);
 
   useEffect(() => {
     const characters = text.split('');

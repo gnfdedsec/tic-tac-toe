@@ -60,7 +60,7 @@ export const Header = ({ user }: HeaderProps) => {
       <div className="flex items-center h-12 md:h-16 pl-2 md:pl-20">
         <Image 
           src="/images/logo/gamelogo.svg"
-          alt="Tic tac toe game"
+          alt="Almost wind game"
           width={150}
           height={75}
           className="object-contain h-full w-auto"

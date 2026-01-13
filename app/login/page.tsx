@@ -51,7 +51,7 @@ export default function Login() {
                 </div>
                 
                 <h1 className="text-2xl md:text-3xl font-bold mb-8 text-gray-800 text-center">
-                  เข้าสู่ระบบเพื่อเล่นเกม
+                  Almost Win : เกมที่ไม่มีวันชนะ
                 </h1>
                 <div className="space-y-4">
                   <RainbowButton
@@ -65,7 +65,7 @@ export default function Login() {
                       alt="Google logo" 
                       className="w-6 h-6 bg-white rounded-full p-1"
                     />
-                    <span>เข้าสู่ระบบด้วย Google</span>
+                    <span>เข้าสู่ระบบเกมด้วย Google</span>
                   </RainbowButton>
                 </div>
               </div>

@@ -130,7 +130,7 @@ export function GameBoard({ user }: GameBoardProps) {
       } else if (winner === "O") {
         playSound('lose')
         toast({
-          title: "😔 บอทชนะ!",
+          title: "😔 AI ชนะ!",
           description: "โชคดีในครั้งหน้านะ",
           variant: "destructive",
           className: "font-krub cursor-pointer",

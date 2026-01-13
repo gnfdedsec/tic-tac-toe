@@ -33,7 +33,11 @@ function calculateWinner(board: (string | null)[]): { winner: Player | null; lin
   return { winner: null, line: null }
 }
 
-function getBotMove(board: (string | null)[]): number {
+// -----------------------
+// Model AI แบบที่ 1 (ง่ายกว่า) - เก็บไว้เป็น comment เผื่ออยากสลับกลับมาใช้
+// -----------------------
+/*
+function getBotMoveModel1(board: (string | null)[]): number {
   // Try to win
   for (let i = 0; i < board.length; i++) {
     if (!board[i]) {
@@ -69,6 +73,66 @@ function getBotMove(board: (string | null)[]): number {
   // Take any available space
   const availableSpaces = board.map((_, i) => i).filter(i => !board[i])
   return availableSpaces[Math.floor(Math.random() * availableSpaces.length)]
+}
+*/
+
+// -----------------------
+// Model AI แบบที่ 2 (ยากขึ้น) - ใช้ Minimax ทำให้ AI แทบไม่แพ้
+// -----------------------
+function getBotMove(board: (string | null)[]): number {
+  const isMovesLeft = (b: (string | null)[]) => b.some(cell => cell === null)
+
+  const minimax = (b: (string | null)[], isMaximizing: boolean): number => {
+    const { winner } = calculateWinner(b)
+
+    if (winner === "O") return 10
+    if (winner === "X") return -10
+    if (!isMovesLeft(b)) return 0
+
+    if (isMaximizing) {
+      // ตา AI (O) พยายามเลือกคะแนนสูงสุด
+      let best = -Infinity
+      for (let i = 0; i < b.length; i++) {
+        if (!b[i]) {
+          const newBoard = [...b]
+          newBoard[i] = "O"
+          const value = minimax(newBoard, false)
+          best = Math.max(best, value)
+        }
+      }
+      return best
+    } else {
+      // ตาผู้เล่น (X) พยายามทำให้คะแนน AI แย่ที่สุด
+      let best = Infinity
+      for (let i = 0; i < b.length; i++) {
+        if (!b[i]) {
+          const newBoard = [...b]
+          newBoard[i] = "X"
+          const value = minimax(newBoard, true)
+          best = Math.min(best, value)
+        }
+      }
+      return best
+    }
+  }
+
+  let bestVal = -Infinity
+  let bestMove = 0
+
+  for (let i = 0; i < board.length; i++) {
+    if (!board[i]) {
+      const newBoard = [...board]
+      newBoard[i] = "O"
+      const moveVal = minimax(newBoard, false)
+
+      if (moveVal > bestVal) {
+        bestVal = moveVal
+        bestMove = i
+      }
+    }
+  }
+
+  return bestMove
 }
 
 const useGameStore = create<GameState>((set, get) => ({

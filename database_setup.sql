@@ -62,3 +62,4 @@ CREATE TRIGGER update_game_stats_updated_at
 -- - RLS จะป้องกันไม่ให้ผู้ใช้แก้ไขข้อมูลของคนอื่น
 -- - Leaderboard สามารถดูได้ทุกคน แต่แก้ไขได้เฉพาะเจ้าของข้อมูล
 
+

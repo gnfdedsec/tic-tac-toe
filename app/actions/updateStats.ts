@@ -10,7 +10,8 @@ interface GameStats {
 }
 
 export async function updateGameStats(stats: GameStats) {
-  const supabase = createServerComponentClient({ cookies })
+  const cookieStore = await cookies()
+  const supabase = createServerComponentClient({ cookies: () => cookieStore })
   
   try {
     const { data: { session } } = await supabase.auth.getSession()
